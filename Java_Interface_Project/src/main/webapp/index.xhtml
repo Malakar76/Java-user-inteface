@@ -8,7 +8,7 @@
         <p:autoUpdate />
     </p:growl>
  
-    <p:signature style="width:400px;height:200px" widgetVar="sig" value="#{signatureView3.value}" required="true" guideline="true"/>
+    <p:signature style="width:400px;height:200px" widgetVar="sig" value="#{signatureView.value}" required="true" guideline="true"/>
  
     <div style="margin:20px 0">
         <p:commandButton value="Submit" icon="pi pi-check" update="output"/>
@@ -16,9 +16,9 @@
     </div>
  
     <p:outputPanel id="output">
-        <h:outputText rendered="#{not empty signatureView3.value}" style="font-size:24px;display:block" value="Your Signature" />
-        <p:signature style="width:400px;height:200px;" value="#{signatureView2.value}" readonly="true"
-                     rendered="#{not empty signatureView3.value}" backgroundColor="#eaeaea" color="#03a9f4"/>
+        <h:outputText rendered="#{not empty signatureView.value}" style="font-size:24px;display:block" value="Your Signature" />
+        <p:signature style="width:400px;height:200px;" value="#{signatureView.value}" readonly="true"
+                     rendered="#{not empty signatureView.value}" backgroundColor="#eaeaea" color="#03a9f4"/>
     </p:outputPanel>
 </h:form>
 </html>
