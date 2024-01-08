@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+<h:head>
+    <title>Admin PA</title>	
+    <link rel="stylesheet" type="text/css" href="navbar.css"></link>
+</h:head>
+<body>
+<nav>
+  <div class="wrapper">
+    <div class="logo"><a href="#">JAVA PROJECT</a></div>
+    <input type="radio" name="slider" id="menu-btn"></input>
+    <input type="radio" name="slider" id="close-btn"></input>
+    <ul class="nav-links">
+      <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+      <li><a href="#">Home</a></li>
+      <li>
+        <a href="#" class="desktop-item">Student Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Student Management</label>
+        <ul class="drop-menu">
+          <li><a href="#">Student List</a></li>
+          <li><a href="#">Account creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="#" class="desktop-item">Team Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Dropdown Menu</label>
+        <ul class="drop-menu">
+          <li><a href="#">Team List</a></li>
+          <li><a href="#">Team creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="#" class="desktop-item">Projects</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Projects</label>
+        <ul class="drop-menu">
+          <li><a href="#">Folder Creation</a></li>
+          <li><a href="#">Submission Track</a></li>
+        </ul>
+      </li>
+       <li><a href="#">Configuration</a></li>
+       <li><a href="#">Archiving</a></li>
+    </ul>
+    <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+  </div>
+</nav>
+
+<div class="body-text">
+  <div class="title">HOME PAGE</div>
+</div>
+</body>
+</html>
