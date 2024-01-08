@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <pageflow:Pageflow xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf17046211269910" configfile="/Java_Interface_Project/src/main/webapp/WEB-INF/faces-config.xml"/>
+=======
+<pageflow:Pageflow xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf17046441343850" configfile="/Java_Interface_Project/src/main/webapp/WEB-INF/faces-config.xml"/>
+>>>>>>> branch 'FrontEnd' of https://github.com/Angrypavlo/Java-user-interface.git
