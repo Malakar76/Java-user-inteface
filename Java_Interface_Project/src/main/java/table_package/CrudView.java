@@ -1,7 +1,6 @@
 package table_package;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.view.ViewScoped;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.List;
@@ -9,100 +8,141 @@ import java.util.UUID;
 import org.primefaces.PrimeFaces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.bean.ApplicationScoped;
 
+@SuppressWarnings("serial")
 @ManagedBean(name="crudView")
-@ViewScoped
-
+@ApplicationScoped
 public class CrudView implements Serializable {
 
-    private List<Product> products;
+	private boolean createAccountCheck;
 
-    private Product selectedProduct;
+    private List<Student> students;
 
-    private List<Product> selectedProducts;
+    private Student selectedStudent;
+    private Student currentStudent;
 
-    @ManagedProperty(value = "#{productService}")
-    private ProductService productService;
+    private List<Student> selectedStudents;
 
-    public ProductService getProductService() {
-        return productService;
+    @ManagedProperty(value = "#{studentService}")
+    private StudentService studentService;
+
+    public Student getCurrentStudent() {
+        return currentStudent;
     }
 
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
+    public void setCurrentStudent(Student currentStudent) {
+        this.currentStudent = currentStudent;
+    }
+    
+    public boolean isCreateAccountCheck() {
+        return createAccountCheck;
+    }
+
+    public void setCreateAccountCheck(boolean createAccountCheck) {
+        this.createAccountCheck = createAccountCheck;
+    }
+    public StudentService getStudentService() {
+        return studentService;
+    }
+
+    public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
     }
   
     @PostConstruct
     public void init() {
-        this.products = this.productService.getClonedProducts(100);
+        this.students = this.studentService.getClonedStudents(100);
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public Product getSelectedProduct() {
-        return selectedProduct;
+    public Student getSelectedStudent() {
+        return selectedStudent;
     }
 
-    public void setSelectedProduct(Product selectedProduct) {
-        this.selectedProduct = selectedProduct;
+    public void setSelectedStudent(Student selectedStudent) {
+        this.selectedStudent = selectedStudent;
     }
 
-    public List<Product> getSelectedProducts() {
-        return selectedProducts;
+    public List<Student> getSelectedStudents() {
+        return selectedStudents;
     }
 
-    public void setSelectedProducts(List<Product> selectedProducts) {
-        this.selectedProducts = selectedProducts;
+    public void setSelectedStudents(List<Student> selectedStudents) {
+        this.selectedStudents = selectedStudents;
     }
 
     public void openNew() {
-    	System.out.println("openNew method called");
-        this.selectedProduct = new Product();
+        System.out.println("openNew method called");
+        this.selectedStudent = new Student();
+        this.selectedStudent.setAccountCreation(AccountCreation.NotCreated);
+    }
+    
+    public void createStudentAccount() {
+        if (currentStudent != null && currentStudent.getAccountCreation() == AccountCreation.NotCreated) {
+            createAccountForStudent(currentStudent);
+            PrimeFaces.current().ajax().update("form:dt-students");
+        }
+    }
+    
+    private void createAccountForStudent(Student student) {
+        String randomPassword = generateRandomPassword();
+        student.setPassword(randomPassword);
+        student.setAccountCreation(AccountCreation.Created);
     }
 
-    public void saveProduct() {
-        if (this.selectedProduct.getCode() == null) {
-            this.selectedProduct.setCode(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 9));
-            this.products.add(this.selectedProduct);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product Added"));
+    public void saveStudent() {
+        if (this.selectedStudent.getId() == null) {
+            this.selectedStudent.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+            this.students.add(this.selectedStudent);
+            if (createAccountCheck) {
+            	createAccountForStudent(this.selectedStudent);
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Student Added"));
         }
         else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product Updated"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Student Updated"));
         }
 
-        PrimeFaces.current().executeScript("PF('manageProductDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+        PrimeFaces.current().executeScript("PF('manageStudentDialog').hide()");
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-students");
     }
 
-    public void deleteProduct() {
-        this.products.remove(this.selectedProduct);
-        this.selectedProducts.remove(this.selectedProduct);
-        this.selectedProduct = null;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product Removed"));
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+    public void deleteStudent() {
+        this.students.remove(this.selectedStudent);
+        this.selectedStudents.remove(this.selectedStudent);
+        this.selectedStudent = null;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Student Removed"));
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-students");
     }
 
     public String getDeleteButtonMessage() {
-        if (hasSelectedProducts()) {
-            int size = this.selectedProducts.size();
-            return size > 1 ? size + " products selected" : "1 product selected";
+        if (hasSelectedStudents()) {
+            int size = this.selectedStudents.size();
+            return size > 1 ? size + " students selected" : "1 student selected";
         }
 
         return "Delete";
     }
 
-    public boolean hasSelectedProducts() {
-        return this.selectedProducts != null && !this.selectedProducts.isEmpty();
+    public boolean hasSelectedStudents() {
+        return this.selectedStudents != null && !this.selectedStudents.isEmpty();
+    }
+    
+    private String generateRandomPassword() {
+        // Implémentez la logique pour générer un mot de passe aléatoire
+        return UUID.randomUUID().toString().substring(0, 8); // Exemple simple
     }
 
-    public void deleteSelectedProducts() {
-        this.products.removeAll(this.selectedProducts);
-        this.selectedProducts = null;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Products Removed"));
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
-        PrimeFaces.current().executeScript("PF('dtProducts').clearFilters()");
+    public void deleteSelectedStudents() {
+        this.students.removeAll(this.selectedStudents);
+        this.selectedStudents = null;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Students Removed"));
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-students");
+        PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
     }
 
 }

@@ -259,7 +259,42 @@ nav input{
 }
 
 .body {
-  width: 95%;
-  margin: auto; /* Cette ligne centrerait horizontalement le contenu */
-  padding-top: 70px; /* Ajustez cette valeur en fonction de la hauteur de votre navbar */
+  width: 99%;
+  margin: auto; 
+  padding-top: 80px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.custom-checkbox .ui-chkbox {
+    margin-right: 10px;
+}
+
+.custom-checkbox-label {
+    font-weight: bold;
+    color: #333; 
+}
+
+.video-container {
+	padding-top: 70px; 
+	display: flex;
+	justify-content: center; 
+	align-items: center; 
+}
+
+.video-card {
+	border: 2px solid #ddd; 
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+	border-radius: 10px; 
+	margin: 20px;
+	padding: 20px; 
+	background-color: #f9f9f9; 
+}
+.video-title {
+	text-align: center; 
+	margin-top: 15px; 
 }
