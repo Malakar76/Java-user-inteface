@@ -23,7 +23,7 @@ public class ProjectService {
         return new ArrayList<>(projects);
     }
 
-    public List<Project> getClonedProjects(int size) {
+    public List<Project> getClonedProjects() {
         List<Project> results = new ArrayList<>();
         List<Project> originals = getProjects();
         for (Project original : originals) {

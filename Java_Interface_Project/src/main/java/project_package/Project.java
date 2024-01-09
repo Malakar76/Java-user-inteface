@@ -5,36 +5,26 @@ import java.io.Serializable;
 public class Project implements Serializable {
 
     private String id;
-    private String code;
-    private String firstName;
-    private String lastName;
-    private String password;
+    private String description;
+    private String name;
+    private String type;
 
     public Project() {
     }
 
-    public Project(String id, String code, String firstName, String lastName,  String password) {
+    public Project(String id, String description, String name,  String type) {
         this.id = id;
-        this.code = code;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
+        this.description = description;
+        this.name = name;
+        this.type = type;
     }
 
     @Override
     public Project clone() {
-        return new Project(getId(), getCode(), getFirstName(), getLastName(), getPassword());
+        return new Project(getId(), getDescription(), getName(), getType());
     }
 
     // Getters and Setters
- 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getId() {
         return id;
@@ -44,28 +34,28 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String Name) {
+        this.name = Name;
     }
-
-    public String getLastName() {
-        return lastName;
+    
+    public String getType() {
+    	return type;
     }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    
+    public void setType(String Type) {
+    	this.type = Type;
     }
 
     // hashCode and equals based on 'id

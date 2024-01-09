@@ -15,8 +15,7 @@ import javax.faces.bean.ApplicationScoped;
 @ApplicationScoped
 public class ProjectView implements Serializable {
 
-
-    private List<Project> projects;
+	private List<Project> projects;
 
     private Project selectedProject;
     private Project currentProject;
@@ -25,6 +24,7 @@ public class ProjectView implements Serializable {
 
     @ManagedProperty(value = "#{projectService}")
     private ProjectService projectService;
+    
 
     public Project getCurrentProject() {
         return currentProject;
@@ -44,7 +44,7 @@ public class ProjectView implements Serializable {
   
     @PostConstruct
     public void init() {
-        this.projects = this.projectService.getClonedProjects(100);
+        this.projects = this.projectService.getClonedProjects();
     }
 
     public List<Project> getProjects() {
