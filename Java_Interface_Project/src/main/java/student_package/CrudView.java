@@ -1,4 +1,4 @@
-package table_package;
+package student_package;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.annotation.PostConstruct;

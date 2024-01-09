@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+<h:head>
+    <title>Projects Creation</title>	
+    <link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>
+<body>
+<nav>
+  <div class="wrapper">
+    <div class="logo"><a href="#">ADMIN</a></div>
+    <input type="radio" name="slider" id="menu-btn"></input>
+    <input type="radio" name="slider" id="close-btn"></input>
+    <ul class="nav-links">
+      <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+      <li><a href="home.xhtml">Home</a></li>
+      <li>
+        <a href="#" class="desktop-item">Student Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Student Management</label>
+        <ul class="drop-menu">
+          <li><a href="student_list.xhtml">Student List</a></li>
+          <li><a href="#">Account creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="#" class="desktop-item">Team Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Dropdown Menu</label>
+        <ul class="drop-menu">
+          <li><a href="#">Team List</a></li>
+          <li><a href="#">Team creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="#" class="desktop-item">Projects</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Projects</label>
+        <ul class="drop-menu">
+          <li><a href="projects_creation.xhtml">Projects Creation</a></li>
+          <li><a href="#">Submission Track</a></li>
+        </ul>
+      </li>
+       <li><a href="#">Configuration</a></li>
+       <li><a href="#">Archiving</a></li>
+    </ul>
+    <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+  </div>
+</nav>
+
+<div class="body">
+	<div class="card crud-demo">
+    	<h:form id="form">
+        	<p:growl id="messages" showDetail="true" />
+
+        	<p:toolbar>
+            	<p:toolbarGroup>
+                	<p:commandButton value="New" icon="pi pi-plus" actionListener="#{projectView.openNew}"
+                    	update=":dialogs:manage-project-content" oncomplete="PF('manageProjectDialog').show()"
+                    	styleClass="ui-button-success" style="margin-right: .5rem">
+                    	<p:resetInput target=":dialogs:manage-project-content" />
+                	</p:commandButton>
+                	<p:commandButton id="delete-projects-button" value="#{projectView.deleteButtonMessage}"
+                    	icon="pi pi-trash" actionListener="#{projectView.deleteSelectedProjects}"
+                    	styleClass="ui-button-danger" disabled="#{!projectView.hasSelectedProjects()}" update="@this">
+                    	<p:confirm header="Confirmation" message="Delete the selected projects?"
+                        	icon="pi pi-exclamation-triangle" />
+                	</p:commandButton>
+            	</p:toolbarGroup>
+            	<p:toolbarGroup align="right">
+                	<p:fileUpload mode="simple" skinSimple="true" label="Import" chooseIcon="pi pi-download" />
+                	<p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                    	<p:dataExporter type="pdf" target="dt-projects" fileName="projects" />
+                	</p:commandButton>
+            	</p:toolbarGroup>
+        	</p:toolbar>
+
+        	<p:dataTable id="dt-projects" widgetVar="dtProjects" var="project" value="#{projectView.projects}"
+            	reflow="true" styleClass="projects-table" selection="#{projectView.selectedProjects}"
+            	rowKey="#{project.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+            	<f:facet name="header">
+                	<div class="projects-table-header">
+                    	<span style="font-weight: bold">PROJECTS</span>
+                    	<span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        	<p:inputText id="globalFilter" onkeyup="PF('dtProjects').filter()" placeholder="Search" />
+                    	</span>
+                	</div>
+            	</f:facet>
+
+            	<p:ajax event="rowSelect" update=":form:delete-projects-button" />
+            	<p:ajax event="rowUnselect" update=":form:delete-projects-button" />
+            	<p:ajax event="rowSelectCheckbox" update=":form:delete-projects-button" />
+            	<p:ajax event="rowUnselectCheckbox" update=":form:delete-projects-button" />
+            	<p:ajax event="toggleSelect" update=":form:delete-projects-button" />
+
+            	<p:column selectionMode="multiple" exportable="false"></p:column>
+            	<p:column headerText="Code" sortBy="#{project.code}" filterBy="#{project.code}">
+                	<h:outputText value="#{project.code}" />
+            	</p:column>
+            	<p:column headerText="First Name" sortBy="#{project.firstName}" filterBy="#{project.firstName}">
+                	<h:outputText value="#{project.firstName}" />
+            	</p:column>
+            	<p:column headerText="Last Name" sortBy="#{project.lastName}" filterBy="#{project.lastName}">
+                	<h:outputText value="#{project.lastName}" />
+            	</p:column>
+
+        	</p:dataTable>
+    	</h:form>
+
+    	<h:form id="dialogs">
+        	<p:dialog header="Project Details" showEffect="fade" modal="true" widgetVar="manageProjectDialog"
+            	responsive="true">
+            	<p:outputPanel id="manage-project-content" class="ui-fluid">
+                	<p:outputPanel rendered="#{not empty projectView.selectedProject}">
+                    	<div class="field">
+                        	<p:outputLabel for="firstName">First Name</p:outputLabel>
+                        	<p:inputText id="firstName" value="#{projectView.selectedProject.firstName}" required="true" />
+                    	</div>
+                    	<div class="field">
+                        	<p:outputLabel for="lastName">Last Name</p:outputLabel>
+                        	<p:inputText id="lastName" value="#{projectView.selectedProject.lastName}" required="true" />
+                    	</div>
+                    	<div class="field">
+                        	<p:outputLabel for="code">Code</p:outputLabel>
+                        	<p:inputText id="code" value="#{projectView.selectedProject.code}" required="true" />
+                    	</div>
+                	</p:outputPanel>
+            	</p:outputPanel>
+
+            	<f:facet name="footer">
+                	<p:commandButton value="Save" icon="pi pi-check" actionListener="#{projectView.saveProject}"
+                    	update="manage-project-content" process="manage-project-content @this" />
+                	<p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProjectDialog').hide()"
+                    	class="ui-button-secondary" type="button" />
+            	</f:facet>
+        	</p:dialog>
+        <p:confirmDialog widgetVar="deleteProjectDialog" showEffect="fade" width="300"
+            message="Delete the selected project(s)?" header="Confirm" severity="warn">
+            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{projectView.deleteSelectedProjects}"
+                process="@this" update=":form:delete-projects-button"
+                oncomplete="PF('deleteProjectDialog').hide()" />
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                onclick="PF('deleteProjectDialog').hide()" />
+        </p:confirmDialog>
+
+        <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                icon="pi pi-times" />
+        </p:confirmDialog>
+    </h:form>
+</div>
+</div>
+</body>
+</html>

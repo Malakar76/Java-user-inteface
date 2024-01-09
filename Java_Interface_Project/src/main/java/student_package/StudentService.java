@@ -1,4 +1,4 @@
-package table_package;
+package student_package;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;

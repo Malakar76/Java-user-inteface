@@ -1,4 +1,4 @@
-package table_package;
+package student_package;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")

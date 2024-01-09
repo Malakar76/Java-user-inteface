@@ -1,4 +1,4 @@
-package table_package;
+package student_package;
 
 public enum AccountCreation {
     Created("Created"),
