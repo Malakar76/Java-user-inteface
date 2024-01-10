@@ -276,7 +276,7 @@ public class ProjectView implements Serializable {
 				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Project")) {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
-	                  Project project = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),null);
+	                  Project project = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeams>());
 	                  //TO DO : ADD TEAM IF ANY  
 	                  projects.add(project);
 				 }
