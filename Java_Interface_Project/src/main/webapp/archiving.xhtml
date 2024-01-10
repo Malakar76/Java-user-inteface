@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+<h:head>
+    <title>Archiving</title>	
+    <link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>
+<body>
+<nav>
+  <div class="wrapper">
+    <div class="logo"><a href="#">ADMIN</a></div>
+    <input type="radio" name="slider" id="menu-btn"></input>
+    <input type="radio" name="slider" id="close-btn"></input>
+    <ul class="nav-links">
+      <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+      <li><a href="home.xhtml">Home</a></li>
+      <li>
+        <a href="student_list.xhtml" class="desktop-item">Student Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Student Management</label>
+        <ul class="drop-menu">
+          <li><a href="student_list.xhtml">Student List</a></li>
+          <li><a href="#">Account creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="#" class="desktop-item">Team Management</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Dropdown Menu</label>
+        <ul class="drop-menu">
+          <li><a href="#">Team List</a></li>
+          <li><a href="#">Team creation</a></li>
+        </ul>
+      </li>
+	  <li>
+        <a href="projects_creation.xhtml" class="desktop-item">Projects</a>
+        <input type="checkbox" id="showDrop"></input>
+        <label for="showDrop" class="mobile-item">Projects</label>
+        <ul class="drop-menu">
+          <li><a href="projects_creation.xhtml">Projects Creation</a></li>
+          <li><a href="#">Submission Track</a></li>
+        </ul>
+      </li>
+       <li><a href="#">Configuration</a></li>
+       <li><a href="archiving.xhtml">Archiving</a></li>
+    </ul>
+    <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+  </div>
+</nav>
+
+<div class="body">
+	<div class="card crud-demo">
+    	<h:form id="form">
+        	<p:growl id="messages" showDetail="true" />
+
+        	<p:toolbar>
+            	<p:toolbarGroup>
+                	<p:commandButton id="delete-archive-button" value="#{archivingView.archiveButtonMessage}"
+                    	icon="pi pi-trash" actionListener="#{archivingView.deleteSelectedArchives}"                    	
+                    	styleClass="ui-button-danger" disabled="#{!archivingView.hasSelectedArchives()}" update="@this">
+                    	<p:confirm header="Confirmation" message="Delete the selected archives?"
+                        	icon="pi pi-exclamation-triangle" />
+                	</p:commandButton>
+            	</p:toolbarGroup>
+            	<p:toolbarGroup align="right">
+                	<p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                    	<p:dataExporter type="pdf" target="dt-students" fileName="archive" />
+                	</p:commandButton>
+            	</p:toolbarGroup>
+        	</p:toolbar>
+        	
+        	 
+
+
+    	</h:form>
+
+    	<h:form id="dialogs">
+
+        <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                icon="pi pi-times" />
+        </p:confirmDialog>
+    </h:form>
+</div>
+</div>
+</body>
+</html>
