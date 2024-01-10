@@ -19,7 +19,6 @@ public class TeamsService {
     @PostConstruct
     public void init() {
     	projectTeams = new ArrayList<>();
-    	projectTeams.add(new Student("dejzjd", "fffze", "Fred", "Mercury",  "zkfefj", AccountCreation.Created));
     }
 
     public List<ProjectTeams> getProjectTeams() {

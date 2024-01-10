@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
 
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ApplicationScoped;
@@ -95,6 +96,7 @@ public class ProjectView implements Serializable {
 	}
 	
 	public void saveTeams() {
+		this.selectedProject.setTeams(this.projectTeams.getTarget());
 		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
 	}
 
@@ -146,5 +148,16 @@ public class ProjectView implements Serializable {
 
 	public void setProjectTeams(DualListModel<ProjectTeams> projectTeams) {
 		this.projectTeams = projectTeams;
+	}
+	
+	public void editTeams() {
+		if (this.selectedProject.getType().equals("Individual")) {
+			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des élèves moins ceux déjà sélectionnés
+			this.projectTeams.setTarget(this.selectedProject.getTeams());
+		}else {
+			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des groups moins ceux déjà sélectionnés
+			this.projectTeams.setTarget(this.selectedProject.getTeams());
+			
+		}
 	}
 }

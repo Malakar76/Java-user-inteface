@@ -64,6 +64,7 @@
 							<p:resetInput target=":dialogs:manage-project-content" />
 						</p:commandButton>
 						<p:commandButton id="edit-project-button" value="Edit"
+							actionListener="#{projectView.editTeams}"
 							icon="pi pi-pencil" style="margin-right: .5rem"
 							update=":dialogs:manage-project-teams"
 							oncomplete="PF('manageProjectTeams').show()"
