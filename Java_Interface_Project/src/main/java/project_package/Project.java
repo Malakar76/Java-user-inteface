@@ -1,6 +1,7 @@
 package project_package;
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class Project implements Serializable {
@@ -12,6 +13,7 @@ public class Project implements Serializable {
     private List<ProjectTeams> projectTeams;
 
     public Project() {
+    	this.projectTeams = new ArrayList<ProjectTeams>();
     }
 
     public Project(String id, String description, String name,  String type, List<ProjectTeams> projectTeams) {
@@ -34,7 +36,8 @@ public class Project implements Serializable {
     }
     
     public void setTeams(List<ProjectTeams> projectTeams) {
-    	this.projectTeams = projectTeams;
+    	this.projectTeams = new ArrayList<ProjectTeams>(projectTeams);
+    			
     }
     
     public String getId() {

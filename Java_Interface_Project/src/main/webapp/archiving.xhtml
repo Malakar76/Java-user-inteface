@@ -72,6 +72,49 @@
             	</p:toolbarGroup>
         	</p:toolbar>
         	
+        	<p:dataView var="car" value="#{dataGridView.cars}"
+                gridIcon="pi pi-th-large" listIcon="pi pi-bars">
+ 
+        <p:dataViewGridItem>
+            <p:panel header="#{car.id}" style="text-align:center">
+                <h:panelGrid columns="1" style="width:100%">
+                    <p:graphicImage name="demo/images/car/#{car.brand}.gif"/> 
+ 
+                    <h:outputText value="#{car.brand}" />
+ 
+                    <p:commandLink update=":form:carDetail" oncomplete="PF('carDialog').show()" title="View Detail">
+                        <h:outputText styleClass="ui-icon pi pi-search" style="margin:0 auto;" />
+                        <f:setPropertyActionListener value="#{car}" target="#{dataGridView.selectedCar}" />
+                    </p:commandLink>
+                </h:panelGrid>
+            </p:panel>
+        </p:dataViewGridItem>
+ 
+        <p:dataViewListItem>
+            <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+                <p:graphicImage name="demo/images/car/#{car.brand}-big.gif" /> 
+ 
+                <p:outputPanel>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <h:outputText value="Id:" />
+                        <h:outputText value="#{car.id}" style="font-weight: bold"/>
+ 
+                        <h:outputText value="Year:" />
+                        <h:outputText value="#{car.year}" style="font-weight: bold"/>
+ 
+                        <h:outputText value="Color:" />
+                        <h:outputText value="#{car.color}" style="font-weight: bold"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+ 
+                <p:commandLink update=":form:carDetail" oncomplete="PF('carDialog').show()" title="View Detail">
+                    <h:outputText styleClass="ui-icon pi pi-search" style="margin:0 auto;" />
+                    <f:setPropertyActionListener value="#{car}" target="#{dataGridView.selectedCar}" />
+                </p:commandLink>
+            </h:panelGrid>
+        </p:dataViewListItem>
+    </p:dataView>
+        	
         	 
 
 

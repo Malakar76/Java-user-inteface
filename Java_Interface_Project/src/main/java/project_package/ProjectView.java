@@ -3,6 +3,9 @@ package project_package;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +13,17 @@ import java.util.UUID;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
 
+import student_package.AccountCreation;
+import student_package.Student;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ApplicationScoped;
+import java.sql.ResultSet;
 
 @SuppressWarnings("serial")
 @ManagedBean(name = "projectView")
@@ -26,12 +36,25 @@ public class ProjectView implements Serializable {
 	private Project currentProject;
 
 	private List<Project> selectedProjects;
+	
+   @Resource(lookup = "java:comp/env/jdbc/h2db")
+	private DataSource dataSource;
 
 	@ManagedProperty(value = "#{projectService}")
 	private ProjectService projectService;
 
 	@ManagedProperty(value = "#{teamsService}")
 	private TeamsService teamsService;
+	
+
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    
+	public DataSource getDataSource() {
+        return dataSource;
+    }
 
 	public Project getCurrentProject() {
 		return currentProject;
@@ -51,11 +74,18 @@ public class ProjectView implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		try {
+            Context context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:comp/env/jdbc/h2db");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		this.projects = this.projectService.getClonedProjects();
 	    List<ProjectTeams> teamsSource = this.teamsService.getProjectTeams();
 	    List<ProjectTeams> teamsTarget = new ArrayList<ProjectTeams>();
 	     
 	    projectTeams = new DualListModel<ProjectTeams>(teamsSource, teamsTarget);
+	    
 	}
 
 	public List<Project> getProjects() {
@@ -159,7 +189,7 @@ public class ProjectView implements Serializable {
 	
 	public void editTeams() {
 		if (this.selectedProject.getType().equals("Individual")) {
-			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des élèves moins ceux déjà sélectionnés
+			this.projectTeams.setSource(availableStudents(this.selectedProject)); // mettre liste des élèves moins ceux déjà sélectionnés
 			this.projectTeams.setTarget(this.selectedProject.getTeams());
 		}else {
 			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des groups moins ceux déjà sélectionnés
@@ -167,4 +197,32 @@ public class ProjectView implements Serializable {
 			
 		}
 	}
+	
+	public List<ProjectTeams> getStudents() {
+		List<ProjectTeams> students = new ArrayList<ProjectTeams>();
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Student")) {
+				ResultSet resultSet = preparedStatement.executeQuery();
+				 while (resultSet.next()) {
+	                  Student student = new Student(resultSet.getString("id"),resultSet.getString("code"),resultSet.getString("firstName"),resultSet.getString("lastName"),resultSet.getString("password"),AccountCreation.NotCreated);
+	                   if (resultSet.getString("accountCreation")=="Created") {
+	                	 student.setAccountCreation(AccountCreation.Created);
+	                   }else {
+	                	  student.setAccountCreation(AccountCreation.NotCreated);
+	                   }
+	                   students.add(student);
+				 }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return students;
+	}
+	
+	public List<ProjectTeams> availableStudents(Project project){
+		List<ProjectTeams> available = new ArrayList<ProjectTeams>(getStudents());
+		available.removeAll(project.getTeams());
+		return available;
+	}
+	
+	
 }

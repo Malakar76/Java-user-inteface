@@ -1,7 +1,6 @@
 package student_package;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import project_package.ProjectTeams;
 
@@ -108,10 +107,10 @@ public class Student implements Serializable , ProjectTeams{
         }
     }
     
-    public List<ProjectTeams> getTeams() {
-    	ArrayList<ProjectTeams> teams = new ArrayList<ProjectTeams>();
-    	teams.add(this);
-    	return teams;
+    public ProjectTeams getTeams() {
+    	ProjectTeams team = new Student();
+    	team=(this);
+    	return team;
     }
     
     public String displayName() {
