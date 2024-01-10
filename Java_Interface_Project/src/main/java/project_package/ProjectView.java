@@ -133,6 +133,13 @@ public class ProjectView implements Serializable {
 		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
 	}
 
+	public void archiveSelectedProjects() {
+		this.projects.removeAll(this.selectedProjects);
+		this.selectedProjects = null;
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Archived"));
+		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
+		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
+	}
 
 	public TeamsService getTeamsService() {
 		return teamsService;

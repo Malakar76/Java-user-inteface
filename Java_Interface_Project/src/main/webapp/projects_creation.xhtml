@@ -74,11 +74,20 @@
 						<p:commandButton id="delete-projects-button"
 							value="#{projectView.deleteButtonMessage}" icon="pi pi-trash"
 							actionListener="#{projectView.deleteSelectedProjects}"
-							styleClass="ui-button-danger"
-							disabled="#{!projectView.hasSelectedProjects()}" update="@this">
+							styleClass="ui-button-danger" style="margin-right: .5rem"
+							disabled="#{!projectView.hasSelectedProjects()}" update="@this, archive-projects-button, edit-project-button">
 							<p:confirm header="Confirmation"
 								message="Delete the selected projects?"
 								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+						<p:commandButton id="archive-projects-button"
+							value="Archive" icon="pi pi-folder-open"
+							actionListener="#{projectView.archiveSelectedProjects}"
+							styleClass="ui-button-warning"
+							disabled="#{!projectView.hasSelectedProjects()}" update="@this, edit-project-button, delete-projects-button">
+							<p:confirm header="Confirmation"
+								message="Archive the selected projects?"
+								icon="pi pi-info-circle" />
 						</p:commandButton>
 					</p:toolbarGroup>
 					<p:toolbarGroup align="right">
@@ -109,15 +118,15 @@
 					</f:facet>
 
 					<p:ajax event="rowSelect"
-						update=":form:delete-projects-button, :form:edit-project-button" />
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
 					<p:ajax event="rowUnselect"
-						update=":form:delete-projects-button, :form:edit-project-button" />
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
 					<p:ajax event="rowSelectCheckbox"
-						update=":form:delete-projects-button, :form:edit-project-button" />
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
 					<p:ajax event="rowUnselectCheckbox"
-						update=":form:delete-projects-button, :form:edit-project-button" />
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
 					<p:ajax event="toggleSelect"
-						update=":form:delete-projects-button, :form:edit-project-button" />
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
 
 					<p:column selectionMode="multiple" exportable="false"></p:column>
 					<p:column headerText="Name" sortBy="#{project.name}"
