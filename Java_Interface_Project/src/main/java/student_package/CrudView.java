@@ -205,18 +205,14 @@ public class CrudView implements Serializable {
 	}
 	
 	public void DeleteStudents(List<Student> selectedStudents) {
-		String value="";
-		for (Student student :selectedStudents) {
-			value += (student.getCode()+",");
-			System.out.println(value);
-		}
-		value = value.substring(0, value.length() - 1);
-		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Student WHERE code=?")) {
-				preparedStatement.setString(1, selectedStudents.get(0).getCode());
-			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		for (Student student : selectedStudents) {
+			try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Student WHERE id=?")) {
+				preparedStatement.setString(1, student.getId());
+				preparedStatement.executeUpdate();
+			} 	catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

@@ -77,10 +77,11 @@ public class ProjectView implements Serializable {
 		try {
             Context context = new InitialContext();
             dataSource = (DataSource) context.lookup("java:comp/env/jdbc/h2db");
+            checkInitTable();
         } catch (Exception e) {
             e.printStackTrace();
         }
-		this.projects = this.projectService.getClonedProjects();
+		this.projects = getProjectsTable();
 	    List<ProjectTeams> teamsSource = this.teamsService.getProjectTeams();
 	    List<ProjectTeams> teamsTarget = new ArrayList<ProjectTeams>();
 	     
@@ -116,6 +117,7 @@ public class ProjectView implements Serializable {
 		if (this.selectedProject.getId() == null) {
 			this.selectedProject.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
 			this.projects.add(this.selectedProject);
+			AddProject(selectedProject);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Added"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Updated"));
@@ -126,11 +128,13 @@ public class ProjectView implements Serializable {
 	}
 	
 	public void saveTeams() {
-		this.selectedProject.setTeams(this.projectTeams.getTarget());
+		UpdateProject(selectedProjects.get(0));
+		this.selectedProjects.get(0).setTeams(this.projectTeams.getTarget());
 		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
 	}
 
 	public void deleteProject() {
+		DeleteProjects(this.selectedProjects);
 		this.projects.remove(this.selectedProject);
 		this.selectedProjects.remove(this.selectedProject);
 		this.selectedProject = null;
@@ -156,6 +160,7 @@ public class ProjectView implements Serializable {
 	}
 
 	public void deleteSelectedProjects() {
+		DeleteProjects(this.selectedProjects);
 		this.projects.removeAll(this.selectedProjects);
 		this.selectedProjects = null;
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Removed"));
@@ -188,12 +193,12 @@ public class ProjectView implements Serializable {
 	}
 	
 	public void editTeams() {
-		if (this.selectedProject.getType().equals("Individual")) {
-			this.projectTeams.setSource(availableStudents(this.selectedProject)); // mettre liste des élèves moins ceux déjà sélectionnés
-			this.projectTeams.setTarget(this.selectedProject.getTeams());
+		if (this.selectedProjects.get(0).getType().equals("Individual")) {
+			this.projectTeams.setSource(availableStudents(this.selectedProjects.get(0))); // mettre liste des élèves moins ceux déjà sélectionnés
+			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
 		}else {
 			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des groups moins ceux déjà sélectionnés
-			this.projectTeams.setTarget(this.selectedProject.getTeams());
+			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
 			
 		}
 	}
@@ -223,6 +228,65 @@ public class ProjectView implements Serializable {
 		available.removeAll(project.getTeams());
 		return available;
 	}
+	
+	public void checkInitTable() {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(
+						"CREATE TABLE IF NOT EXISTS Project (id VARCHAR(255), description VARCHAR(255), name VARCHAR(255), type VARCHAR(255))")) {
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void AddProject(Project selectedProject) {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(
+						"INSERT INTO Project (id, description, name, type) VALUES (?, ?, ?, ?)")) {
+			preparedStatement.setString(1, selectedProject.getId());
+			preparedStatement.setString(2, selectedProject.getDescription());
+			preparedStatement.setString(3, selectedProject.getName());
+			preparedStatement.setString(4, selectedProject.getType());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void DeleteProjects(List<Project> selectedProjects) {
+		for (Project project : selectedProjects) {
+			try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Project WHERE id=?")) {
+				preparedStatement.setString(1, project.getId());
+				preparedStatement.executeUpdate();
+				//TO DO : ADD DELETION OF TEAMS TABLE IF ANY
+			} 	catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void UpdateProject(Project selectedProject) {
+		//TO DO : ADD TEAMS TABLE TO A PROJECT WITH SAME ID
+	}
+	
+	public List<Project> getProjectsTable() {
+		List<Project> projects = new ArrayList<Project>();
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Project")) {
+				ResultSet resultSet = preparedStatement.executeQuery();
+				 while (resultSet.next()) {
+	                  Project project = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),null);
+	                  //TO DO : ADD TEAM IF ANY  
+	                  projects.add(project);
+				 }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return projects;
+	}
+	
+	
 	
 	
 }
