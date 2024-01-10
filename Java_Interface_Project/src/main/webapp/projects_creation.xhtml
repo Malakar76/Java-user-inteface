@@ -63,6 +63,13 @@
 							styleClass="ui-button-success" style="margin-right: .5rem">
 							<p:resetInput target=":dialogs:manage-project-content" />
 						</p:commandButton>
+						<p:commandButton id="edit-project-button" value="Edit"
+							icon="pi pi-pencil" style="margin-right: .5rem"
+							update=":dialogs:manage-project-teams"
+							oncomplete="PF('manageProjectTeams').show()"
+							disabled="#{!projectView.hasOneSelectedProject()}">
+
+						</p:commandButton>
 						<p:commandButton id="delete-projects-button"
 							value="#{projectView.deleteButtonMessage}" icon="pi pi-trash"
 							actionListener="#{projectView.deleteSelectedProjects}"
@@ -100,13 +107,16 @@
 						</div>
 					</f:facet>
 
-					<p:ajax event="rowSelect" update=":form:delete-projects-button" />
-					<p:ajax event="rowUnselect" update=":form:delete-projects-button" />
+					<p:ajax event="rowSelect"
+						update=":form:delete-projects-button, :form:edit-project-button" />
+					<p:ajax event="rowUnselect"
+						update=":form:delete-projects-button, :form:edit-project-button" />
 					<p:ajax event="rowSelectCheckbox"
-						update=":form:delete-projects-button" />
+						update=":form:delete-projects-button, :form:edit-project-button" />
 					<p:ajax event="rowUnselectCheckbox"
-						update=":form:delete-projects-button" />
-					<p:ajax event="toggleSelect" update=":form:delete-projects-button" />
+						update=":form:delete-projects-button, :form:edit-project-button" />
+					<p:ajax event="toggleSelect"
+						update=":form:delete-projects-button, :form:edit-project-button" />
 
 					<p:column selectionMode="multiple" exportable="false"></p:column>
 					<p:column headerText="Name" sortBy="#{project.name}"
@@ -132,15 +142,19 @@
 						<p:outputPanel rendered="#{not empty projectView.selectedProject}">
 							<div class="field">
 								<p:outputLabel for="name">Name</p:outputLabel>
-								<p:inputText id="name" value="#{projectView.selectedProject.name}" required="true" />
+								<p:inputText id="name"
+									value="#{projectView.selectedProject.name}" required="true" />
 							</div>
 							<div class="field">
 								<p:outputLabel for="description">Description</p:outputLabel>
-								<p:inputTextarea id="description" value="#{projectView.selectedProject.description}" required="true" />
+								<p:inputTextarea id="description"
+									value="#{projectView.selectedProject.description}"
+									required="true" />
 							</div>
 							<div class="field">
 								<p:outputLabel for="type">Type</p:outputLabel>
-								<p:selectOneButton id= "type" value="#{projectView.selectedProject.type}">
+								<p:selectOneButton id="type"
+									value="#{projectView.selectedProject.type}" required="true">
 									<f:selectItem itemLabel="Individual" itemValue="Individual" />
 									<f:selectItem itemLabel="Group" itemValue="Group" />
 								</p:selectOneButton>
@@ -155,6 +169,40 @@
 							process="manage-project-content @this" />
 						<p:commandButton value="Cancel" icon="pi pi-times"
 							onclick="PF('manageProjectDialog').hide()"
+							class="ui-button-secondary" type="button" />
+					</f:facet>
+				</p:dialog>
+				<p:dialog header="Project Teams" showEffect="fade" modal="true"
+					widgetVar="manageProjectTeams" responsive="true">
+					<p:outputPanel id="manage-project-teams" class="ui-fluid">
+						<p:outputPanel rendered="#{not empty projectView.selectedProject}">
+							<div class="field">
+								<p:pickList id="PojoPickList" value="#{projectView.projectTeams}"
+									var="projectTeams" effect="bounce" itemValue="#{projectTeams}"
+									itemLabel="#{projectTeams.displayName()}" showSourceControls="false"
+									showTargetControls="false" showCheckbox="false"
+									showSourceFilter="true" showTargetFilter="true"
+									filterMatchMode="contains" 
+									responsive="true">
+
+									<f:facet name="sourceCaption">Available</f:facet>
+									<f:facet name="targetCaption">Assigned</f:facet>
+
+									<p:column>
+										<h:outputText value="#{projectTeams.displayName()}" />
+									</p:column>
+								</p:pickList>
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<f:facet name="footer">
+						<p:commandButton value="Save" icon="pi pi-check"
+							actionListener="#{projectView.saveTeams}"
+							update="manage-project-teams"
+							process="manage-project-teams @this" />
+						<p:commandButton value="Cancel" icon="pi pi-times"
+							onclick="PF('manageProjectTeams').hide()"
 							class="ui-button-secondary" type="button" />
 					</f:facet>
 				</p:dialog>

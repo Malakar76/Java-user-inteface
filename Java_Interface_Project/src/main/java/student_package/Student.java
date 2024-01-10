@@ -1,8 +1,12 @@
 package student_package;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import project_package.ProjectTeams;
 
 @SuppressWarnings("serial")
-public class Student implements Serializable {
+public class Student implements Serializable , ProjectTeams{
 
     private String id;
     private String code;
@@ -102,5 +106,15 @@ public class Student implements Serializable {
         } else {
             return id.equals(other.id);
         }
+    }
+    
+    public List<ProjectTeams> getTeams() {
+    	ArrayList<ProjectTeams> teams = new ArrayList<ProjectTeams>();
+    	teams.add(this);
+    	return teams;
+    }
+    
+    public String displayName() {
+    	return (this.firstName +" "+this.lastName);
     }
 }

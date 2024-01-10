@@ -1,119 +1,150 @@
 package project_package;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.DualListModel;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ApplicationScoped;
 
 @SuppressWarnings("serial")
-@ManagedBean(name="projectView")
+@ManagedBean(name = "projectView")
 @ApplicationScoped
 public class ProjectView implements Serializable {
 
 	private List<Project> projects;
+	private DualListModel<ProjectTeams> projectTeams;
+	private Project selectedProject;
+	private Project currentProject;
 
-    private Project selectedProject;
-    private Project currentProject;
+	private List<Project> selectedProjects;
 
-    private List<Project> selectedProjects;
+	@ManagedProperty(value = "#{projectService}")
+	private ProjectService projectService;
 
-    @ManagedProperty(value = "#{projectService}")
-    private ProjectService projectService;
-    
+	@ManagedProperty(value = "#{teamsService}")
+	private TeamsService teamsService;
 
-    public Project getCurrentProject() {
-        return currentProject;
-    }
+	public Project getCurrentProject() {
+		return currentProject;
+	}
 
-    public void setCurrentProject(Project currentProject) {
-        this.currentProject = currentProject;
-    }
-    
-    public ProjectService getProjectService() {
-        return projectService;
-    }
+	public void setCurrentProject(Project currentProject) {
+		this.currentProject = currentProject;
+	}
 
-    public void setProjectService(ProjectService projectService) {
-        this.projectService = projectService;
-    }
-  
-    @PostConstruct
-    public void init() {
-        this.projects = this.projectService.getClonedProjects();
-    }
+	public ProjectService getProjectService() {
+		return projectService;
+	}
 
-    public List<Project> getProjects() {
-        return projects;
-    }
+	public void setProjectService(ProjectService projectService) {
+		this.projectService = projectService;
+	}
 
-    public Project getSelectedProject() {
-        return selectedProject;
-    }
+	@PostConstruct
+	public void init() {
+		this.projects = this.projectService.getClonedProjects();
+	    List<ProjectTeams> teamsSource = this.teamsService.getProjectTeams();
+	    List<ProjectTeams> teamsTarget = new ArrayList<ProjectTeams>();
+	     
+	    projectTeams = new DualListModel<ProjectTeams>(teamsSource, teamsTarget);
+	}
 
-    public void setSelectedProject(Project selectedProject) {
-        this.selectedProject = selectedProject;
-    }
+	public List<Project> getProjects() {
+		return projects;
+	}
 
-    public List<Project> getSelectedProjects() {
-        return selectedProjects;
-    }
+	public Project getSelectedProject() {
+		return selectedProject;
+	}
 
-    public void setSelectedProjects(List<Project> selectedProjects) {
-        this.selectedProjects = selectedProjects;
-    }
+	public void setSelectedProject(Project selectedProject) {
+		this.selectedProject = selectedProject;
+	}
 
-    public void openNew() {
-        System.out.println("openNew method called");
-        this.selectedProject = new Project();
-    }
+	public List<Project> getSelectedProjects() {
+		return selectedProjects;
+	}
 
-    public void saveProject() {
-        if (this.selectedProject.getId() == null) {
-            this.selectedProject.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
-            this.projects.add(this.selectedProject);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Added"));
-        }
-        else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Updated"));
-        }
+	public void setSelectedProjects(List<Project> selectedProjects) {
+		this.selectedProjects = selectedProjects;
+	}
 
-        PrimeFaces.current().executeScript("PF('manageProjectDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
-    }
+	public void openNew() {
+		this.selectedProject = new Project();
+	}
 
-    public void deleteProject() {
-        this.projects.remove(this.selectedProject);
-        this.selectedProjects.remove(this.selectedProject);
-        this.selectedProject = null;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Removed"));
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
-    }
+	public void saveProject() {
+		if (this.selectedProject.getId() == null) {
+			this.selectedProject.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+			this.projects.add(this.selectedProject);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Added"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Updated"));
+		}
 
-    public String getDeleteButtonMessage() {
-        if (hasSelectedProjects()) {
-            int size = this.selectedProjects.size();
-            return size > 1 ? size + " projects selected" : "1 project selected";
-        }
+		PrimeFaces.current().executeScript("PF('manageProjectDialog').hide()");
+		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
+	}
+	
+	public void saveTeams() {
+		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
+	}
 
-        return "Delete";
-    }
+	public void deleteProject() {
+		this.projects.remove(this.selectedProject);
+		this.selectedProjects.remove(this.selectedProject);
+		this.selectedProject = null;
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Removed"));
+		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
+	}
 
-    public boolean hasSelectedProjects() {
-        return this.selectedProjects != null && !this.selectedProjects.isEmpty();
-    }
-    
+	public String getDeleteButtonMessage() {
+		if (hasSelectedProjects()) {
+			int size = this.selectedProjects.size();
+			return size > 1 ? size + " projects selected" : "1 project selected";
+		}
 
-    public void deleteSelectedProjects() {
-        this.projects.removeAll(this.selectedProjects);
-        this.selectedProjects = null;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Removed"));
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
-        PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
-    }
+		return "Delete";
+	}
 
+	public boolean hasSelectedProjects() {
+		return this.selectedProjects != null && !this.selectedProjects.isEmpty();
+	}
+
+	public boolean hasOneSelectedProject() {
+		return this.selectedProjects != null && (this.selectedProjects.size() == 1);
+	}
+
+	public void deleteSelectedProjects() {
+		this.projects.removeAll(this.selectedProjects);
+		this.selectedProjects = null;
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Removed"));
+		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
+		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
+	}
+
+
+	public TeamsService getTeamsService() {
+		return teamsService;
+	}
+
+	public void setTeamsService(TeamsService teamsService) {
+		this.teamsService = teamsService;
+	}
+
+	public DualListModel<ProjectTeams> getProjectTeams() {
+		return projectTeams;
+	}
+
+	public void setProjectTeams(DualListModel<ProjectTeams> projectTeams) {
+		this.projectTeams = projectTeams;
+	}
 }

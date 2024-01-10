@@ -1,5 +1,6 @@
 package project_package;
 import java.io.Serializable;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class Project implements Serializable {
@@ -8,24 +9,34 @@ public class Project implements Serializable {
     private String description;
     private String name;
     private String type;
+    private List<ProjectTeams> projectTeams;
 
     public Project() {
     }
 
-    public Project(String id, String description, String name,  String type) {
+    public Project(String id, String description, String name,  String type, List<ProjectTeams> projectTeams) {
         this.id = id;
         this.description = description;
         this.name = name;
         this.type = type;
+        this.projectTeams = projectTeams;
     }
 
     @Override
     public Project clone() {
-        return new Project(getId(), getDescription(), getName(), getType());
+        return new Project(getId(), getDescription(), getName(), getType(), getTeams());
     }
 
     // Getters and Setters
 
+    public List<ProjectTeams> getTeams(){
+    	return projectTeams;
+    }
+    
+    public void setTeams(List<ProjectTeams> projectTeams) {
+    	this.projectTeams = projectTeams;
+    }
+    
     public String getId() {
         return id;
     }
