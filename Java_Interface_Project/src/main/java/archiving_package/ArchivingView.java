@@ -4,7 +4,6 @@ package archiving_package;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 

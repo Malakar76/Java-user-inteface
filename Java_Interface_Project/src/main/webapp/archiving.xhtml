@@ -139,8 +139,7 @@
 					modal="true" showEffect="fade" hideEffect="fade" resizable="false">
 					<p:outputPanel id="archiveDetail" style="text-align:center;">
 						<p:panelGrid columns="2"
-							rendered="#{not empty archivingView.selectedArchive}"
-							columnClasses="label,value">
+							rendered="#{not empty archivingView.selectedArchive}">
 
 
 							<h:outputText value="Name:" />
@@ -155,10 +154,11 @@
 
 
 						</p:panelGrid>
+						<p:spacer height="50px" /> 
 						<p:commandButton id="delete-archive-button" value="Delete"
 							icon="pi pi-trash"
 							actionListener="#{archivingView.deleteSelectedArchive}"
-							styleClass="ui-button-danger">
+							styleClass="ui-button-danger" >
 							<f:setPropertyActionListener
 								value="#{archivingView.selectedArchive}"
 								target="#{archivingView.selectedArchive}" />

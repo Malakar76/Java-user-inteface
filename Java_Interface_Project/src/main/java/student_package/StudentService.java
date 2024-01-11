@@ -22,7 +22,7 @@ public class StudentService {
         return new ArrayList<>(students);
     }
 
-    public List<Student> getClonedStudents(int size) {
+    public List<Student> getClonedStudents() {
         List<Student> results = new ArrayList<>();
         List<Student> originals = getStudents();
         for (Student original : originals) {

@@ -164,7 +164,7 @@ public class CrudView implements Serializable {
 	}
 
 	private String generateRandomPassword() {
-		// Implémentez la logique pour générer un mot de passe aléatoire
+		// TODO : Generate Random Password
 		return UUID.randomUUID().toString().substring(0, 8); // Exemple simple
 	}
 
