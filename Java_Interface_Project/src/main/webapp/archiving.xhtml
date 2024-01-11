@@ -65,10 +65,17 @@
 				<p:growl id="messages" showDetail="true" />
 
 				<p:toolbar>
+				<p:toolbarGroup>
+                	<p:commandButton value="Refresh" icon="pi pi-refresh" actionListener="#{archivingView.updateArchiveList}"
+                    	update=":form:dt-archive"
+                    	styleClass="ui-button-info" style="margin-right: .5rem">
+                	</p:commandButton>
+           
+         			</p:toolbarGroup>
 					<p:toolbarGroup align="right">
 						<p:commandButton value="Export" icon="pi pi-upload"
 							styleClass="ui-button-help" ajax="false">
-							<p:dataExporter type="pdf" target="dt-students"
+							<p:dataExporter type="pdf" target="dt-archive"
 								fileName="archive" />
 						</p:commandButton>
 					</p:toolbarGroup>
@@ -108,7 +115,7 @@
 							</p:outputPanel>
 
 							<p:commandLink update=":dialogs:archiveDetail"
-								oncomplete="PF('archiveDialog').show()" title="View Detail" action="archivingView.setSelectedArchive">
+								oncomplete="PF('archiveDialog').show()" title="View Detail">
 								<h:outputText styleClass="ui-icon pi pi-search"
 									style="margin:0 auto;" />
 								<f:setPropertyActionListener value="#{archive}"
@@ -147,11 +154,14 @@
 						</p:panelGrid>
 						<p:commandButton id="delete-archive-button"
 							value="Delete" icon="pi pi-trash"
-							action="#{archivingView.deleteSelectedArchive}"
+							actionListener="#{archivingView.deleteSelectedArchive}"
 							styleClass="ui-button-danger">
+							<f:setPropertyActionListener value="#{archivingView.selectedArchive}"
+									target="#{archivingView.selectedArchive}" />
 							<p:confirm header="Confirmation"
 								message="Delete the selected archive?"
 								icon="pi pi-exclamation-triangle" />
+								
 						</p:commandButton>
 					</p:outputPanel>
 				</p:dialog>

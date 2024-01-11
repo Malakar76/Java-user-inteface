@@ -1,6 +1,7 @@
 package archiving_package;
 
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -29,7 +30,7 @@ import javax.sql.DataSource;
 
 @SuppressWarnings("serial")
 @ManagedBean(name = "archivingView")
-@RequestScoped
+@ApplicationScoped
 public class ArchivingView implements Serializable {
 
 	private List<Project> archives;
@@ -84,8 +85,8 @@ public class ArchivingView implements Serializable {
 		return archives;
 	}
 	
-	public void setArchives() {
-		this.archives = getArchivesTable();
+	public void setArchives(List<Project> archives) {
+		this.archives = archives;
 	}
 
 	public Project getSelectedArchive() {
@@ -93,7 +94,6 @@ public class ArchivingView implements Serializable {
 	}
 
 	public void setSelectedArchive(Project selectedArchive) {
-		System.out.println(selectedArchive);
 		this.selectedArchive = selectedArchive;
 	}
 
@@ -163,6 +163,11 @@ public class ArchivingView implements Serializable {
 			e.printStackTrace();
 		}
 		return archives;
+	}
+	
+	public void updateArchiveList() {
+		this.archives = getArchivesTable();
+		
 	}
 	
 	

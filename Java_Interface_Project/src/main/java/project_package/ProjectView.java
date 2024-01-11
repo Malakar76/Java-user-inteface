@@ -174,7 +174,7 @@ public class ProjectView implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Archived"));
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
 		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
-		System.out.println("archive ok");
+		
 	}
 
 	public TeamsService getTeamsService() {
