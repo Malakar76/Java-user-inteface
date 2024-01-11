@@ -15,7 +15,6 @@ import org.primefaces.model.DualListModel;
 
 import student_package.AccountCreation;
 import student_package.Student;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -169,11 +168,13 @@ public class ProjectView implements Serializable {
 	}
 
 	public void archiveSelectedProjects() {
+		AddArchivesProjects(this.selectedProjects);
 		this.projects.removeAll(this.selectedProjects);
 		this.selectedProjects = null;
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Projects Archived"));
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
 		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
+		System.out.println("archive ok");
 	}
 
 	public TeamsService getTeamsService() {
@@ -284,6 +285,22 @@ public class ProjectView implements Serializable {
 			e.printStackTrace();
 		}
 		return projects;
+	}
+	
+	public void AddArchivesProjects(List<Project> selectedProjects) {
+		for (Project project : selectedProjects) {
+			try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Archive (id, description, name, type) VALUES (?,?,?,?)")) {
+				preparedStatement.setString(1, project.getId());
+				preparedStatement.setString(2, project.getDescription());
+				preparedStatement.setString(3, project.getName());
+				preparedStatement.setString(4, project.getType());
+				preparedStatement.executeUpdate();
+			} 	catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		DeleteProjects(selectedProjects);
 	}
 	
 	
