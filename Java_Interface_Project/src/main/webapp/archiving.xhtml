@@ -14,8 +14,6 @@
 	/* with the exported variables from Nova and Luna Themes*/
 	border-bottom-color: var(--input-border-color, #A8A8A8);
 }
-
-
 </style>
 </h:head>
 <body>
@@ -65,24 +63,25 @@
 				<p:growl id="messages" showDetail="true" />
 
 				<p:toolbar>
-				<p:toolbarGroup>
-                	<p:commandButton value="Refresh" icon="pi pi-refresh" actionListener="#{archivingView.updateArchiveList}"
-                    	update=":form:dt-archive"
-                    	styleClass="ui-button-info" style="margin-right: .5rem">
-                	</p:commandButton>
-           
-         			</p:toolbarGroup>
+					<p:toolbarGroup>
+						<p:commandButton value="Refresh" icon="pi pi-refresh"
+							actionListener="#{archivingView.updateArchiveList}"
+							update=":form:dt-archive" styleClass="ui-button-info"
+							style="margin-right: .5rem">
+						</p:commandButton>
+
+					</p:toolbarGroup>
 					<p:toolbarGroup align="right">
 						<p:commandButton value="Export" icon="pi pi-upload"
 							styleClass="ui-button-help" ajax="false">
-							<p:dataExporter type="pdf" target="dt-archive"
-								fileName="archive" />
+							<p:dataExporter type="pdf" target="dt-archive" fileName="archive" />
 						</p:commandButton>
 					</p:toolbarGroup>
 				</p:toolbar>
 
 				<p:dataView var="archive" value="#{archivingView.archives}"
-					gridIcon="pi pi-th-large" listIcon="pi pi-bars" id="dt-archive" widgetVar="dt-archive">
+					gridIcon="pi pi-th-large" listIcon="pi pi-bars" id="dt-archive"
+					widgetVar="dt-archive">
 
 					<p:dataViewGridItem>
 						<p:panel header="#{archive.name}" style="text-align:center">
@@ -100,29 +99,33 @@
 					</p:dataViewGridItem>
 
 					<p:dataViewListItem>
-						<h:panelGrid columns="4" style="width:100%"
-							columnClasses="logo,detail">
-							
-							
-							<p:outputPanel>
-									<h:outputText value="#{archive.name}" style="font-weight: bold" />
-							</p:outputPanel>
-							<p:outputPanel>
-								<h:outputText value="#{archive.description}" style="font-weight: bold" />
-							</p:outputPanel>
-							<p:outputPanel>
-								<h:outputText value="#{archive.type}" style="font-weight: bold" />
-							</p:outputPanel>
+						<h:panelGroup
+							style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+							<h:panelGroup style="flex: 1;">
+								<h:outputText value="#{archive.name}" style="font-weight: bold;  margin-right: 10px;" />
+							</h:panelGroup>
 
-							<p:commandLink update=":dialogs:archiveDetail"
-								oncomplete="PF('archiveDialog').show()" title="View Detail">
-								<h:outputText styleClass="ui-icon pi pi-search"
-									style="margin:0 auto;" />
-								<f:setPropertyActionListener value="#{archive}"
-									target="#{archivingView.selectedArchive}" />
-							</p:commandLink>
-						</h:panelGrid>
+							<h:panelGroup style="flex: 1; overflow: hidden; margin-right: 10px;">
+								<h:outputText value="#{archive.description}"
+									style="font-weight: bold" />
+							</h:panelGroup>
+
+							<h:panelGroup style="flex: 1;">
+								<h:outputText value="#{archive.type}" style="font-weight: bold; margin-right: 10px;" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:commandLink update=":dialogs:archiveDetail"
+									oncomplete="PF('archiveDialog').show()" title="View Detail">
+									<h:outputText styleClass="ui-icon pi pi-search"
+										style="margin:0 auto;" />
+									<f:setPropertyActionListener value="#{archive}"
+										target="#{archivingView.selectedArchive}" />
+								</p:commandLink>
+							</h:panelGroup>
+						</h:panelGroup>
 					</p:dataViewListItem>
+
 				</p:dataView>
 
 
@@ -149,19 +152,20 @@
 
 							<h:outputText value="Type:" />
 							<h:outputText value="#{archivingView.selectedArchive.type}" />
-							
-							
+
+
 						</p:panelGrid>
-						<p:commandButton id="delete-archive-button"
-							value="Delete" icon="pi pi-trash"
+						<p:commandButton id="delete-archive-button" value="Delete"
+							icon="pi pi-trash"
 							actionListener="#{archivingView.deleteSelectedArchive}"
 							styleClass="ui-button-danger">
-							<f:setPropertyActionListener value="#{archivingView.selectedArchive}"
-									target="#{archivingView.selectedArchive}" />
+							<f:setPropertyActionListener
+								value="#{archivingView.selectedArchive}"
+								target="#{archivingView.selectedArchive}" />
 							<p:confirm header="Confirmation"
 								message="Delete the selected archive?"
 								icon="pi pi-exclamation-triangle" />
-								
+
 						</p:commandButton>
 					</p:outputPanel>
 				</p:dialog>

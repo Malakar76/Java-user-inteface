@@ -119,7 +119,6 @@ public class ArchivingView implements Serializable {
 	}
 
 	public void deleteSelectedArchive() {
-		System.out.println(this.selectedArchive);
 		DeleteArchive(this.selectedArchive);
 		this.archives.remove(this.selectedArchive);
 		this.selectedArchive = null;
