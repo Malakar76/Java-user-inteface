@@ -2,10 +2,10 @@ package student_package;
 import java.io.Serializable;
 
 
-import project_package.ProjectTeams;
+import project_package.ProjectTeam;
 
 @SuppressWarnings("serial")
-public class Student implements Serializable , ProjectTeams{
+public class Student implements Serializable , ProjectTeam{
 
     private String id;
     private String code;
@@ -107,13 +107,29 @@ public class Student implements Serializable , ProjectTeams{
         }
     }
     
-    public ProjectTeams getTeams() {
-    	ProjectTeams team = new Student();
-    	team=(this);
-    	return team;
-    }
     
     public String displayName() {
     	return (this.firstName +" "+this.lastName);
+    }
+    
+    public String toString() {
+    	return (id+":"+code+":"+firstName+":"+lastName+":"+password+":"+accountCreation);
+    }
+    
+    public static ProjectTeam fromString(String value) {
+    	String [] parts = value.split(":");
+    	ProjectTeam team = new Student();
+    	((Student)team).setId(parts[0]);
+    	((Student)team).setCode(parts[1]);
+    	((Student)team).setFirstName(parts[2]);
+    	((Student)team).setLastName(parts[3]);
+    	if (parts[5].equals("Created")) {
+    		((Student)team).setPassword(parts[4]);
+    		((Student)team).setAccountCreation(AccountCreation.Created);
+    	}else {
+    		((Student)team).setAccountCreation(AccountCreation.NotCreated);
+    	}
+    	
+    	return team;
     }
 }

@@ -14,14 +14,14 @@ import javax.faces.bean.ApplicationScoped;
 @ApplicationScoped
 public class TeamsService {
 
-    private List<ProjectTeams> projectTeams;
+    private List<ProjectTeam> projectTeams;
 
     @PostConstruct
     public void init() {
     	projectTeams = new ArrayList<>();
     }
 
-    public List<ProjectTeams> getProjectTeams() {
+    public List<ProjectTeam> getProjectTeams() {
         return projectTeams;
     }
 }

@@ -10,13 +10,13 @@ public class Project implements Serializable {
     private String description;
     private String name;
     private String type;
-    private List<ProjectTeams> projectTeams;
+    private List<ProjectTeam> projectTeams;
 
     public Project() {
-    	this.projectTeams = new ArrayList<ProjectTeams>();
+    	this.projectTeams = new ArrayList<ProjectTeam>();
     }
 
-    public Project(String id, String description, String name,  String type, List<ProjectTeams> projectTeams) {
+    public Project(String id, String description, String name,  String type, List<ProjectTeam> projectTeams) {
         this.id = id;
         this.description = description;
         this.name = name;
@@ -31,12 +31,13 @@ public class Project implements Serializable {
 
     // Getters and Setters
 
-    public List<ProjectTeams> getTeams(){
+    public List<ProjectTeam> getTeams(){
     	return projectTeams;
     }
     
-    public void setTeams(List<ProjectTeams> projectTeams) {
-    	this.projectTeams = new ArrayList<ProjectTeams>(projectTeams);
+    public void setTeams(List<ProjectTeam> projectTeams) {
+    	this.projectTeams = new ArrayList<ProjectTeam>();
+    	this.projectTeams.addAll(projectTeams);
     			
     }
     
@@ -96,5 +97,9 @@ public class Project implements Serializable {
         } else {
             return id.equals(other.id);
         }
+    }
+    
+    public void addTeam(ProjectTeam team) {
+    	this.projectTeams.add(team);
     }
 }

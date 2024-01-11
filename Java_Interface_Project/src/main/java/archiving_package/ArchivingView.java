@@ -20,7 +20,7 @@ import org.primefaces.PrimeFaces;
 
 import project_package.Project;
 import project_package.ProjectService;
-import project_package.ProjectTeams;
+import project_package.ProjectTeam;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -154,7 +154,7 @@ public class ArchivingView implements Serializable {
 				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Archive")) {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
-	                  Project archive = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeams>());
+	                  Project archive = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeam>());
 	                  //TO DO : ADD TEAM IF ANY  
 	                  archives.add(archive);
 				 }

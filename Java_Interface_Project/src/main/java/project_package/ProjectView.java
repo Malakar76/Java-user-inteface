@@ -30,7 +30,7 @@ import java.sql.ResultSet;
 public class ProjectView implements Serializable {
 
 	private List<Project> projects;
-	private DualListModel<ProjectTeams> projectTeams;
+	private DualListModel<ProjectTeam> projectTeams;
 	private Project selectedProject;
 	private Project currentProject;
 
@@ -81,10 +81,10 @@ public class ProjectView implements Serializable {
             e.printStackTrace();
         }
 		this.projects = getProjectsTable();
-	    List<ProjectTeams> teamsSource = this.teamsService.getProjectTeams();
-	    List<ProjectTeams> teamsTarget = new ArrayList<ProjectTeams>();
+	    List<ProjectTeam> teamsSource = this.teamsService.getProjectTeams();
+	    List<ProjectTeam> teamsTarget = new ArrayList<>();
 	     
-	    projectTeams = new DualListModel<ProjectTeams>(teamsSource, teamsTarget);
+	    projectTeams = new DualListModel<ProjectTeam>(teamsSource, teamsTarget);
 	    
 	}
 
@@ -124,21 +124,15 @@ public class ProjectView implements Serializable {
 
 		PrimeFaces.current().executeScript("PF('manageProjectDialog').hide()");
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
+		
 	}
 	
 	public void saveTeams() {
 		UpdateProject(selectedProjects.get(0));
 		this.selectedProjects.get(0).setTeams(this.projectTeams.getTarget());
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Saved"));
+		PrimeFaces.current().ajax().update("form:messages");
 		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
-	}
-
-	public void deleteProject() {
-		DeleteProjects(this.selectedProjects);
-		this.projects.remove(this.selectedProject);
-		this.selectedProjects.remove(this.selectedProject);
-		this.selectedProject = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Project Removed"));
-		PrimeFaces.current().ajax().update("form:messages", "form:dt-projects");
 	}
 
 	public String getDeleteButtonMessage() {
@@ -185,11 +179,11 @@ public class ProjectView implements Serializable {
 		this.teamsService = teamsService;
 	}
 
-	public DualListModel<ProjectTeams> getProjectTeams() {
+	public DualListModel<ProjectTeam> getProjectTeams() {
 		return projectTeams;
 	}
 
-	public void setProjectTeams(DualListModel<ProjectTeams> projectTeams) {
+	public void setProjectTeams(DualListModel<ProjectTeam> projectTeams) {
 		this.projectTeams = projectTeams;
 	}
 	
@@ -198,14 +192,14 @@ public class ProjectView implements Serializable {
 			this.projectTeams.setSource(availableStudents(this.selectedProjects.get(0))); // mettre liste des élèves moins ceux déjà sélectionnés
 			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
 		}else {
-			this.projectTeams.setSource(new ArrayList<ProjectTeams>()); // mettre liste des groups moins ceux déjà sélectionnés
+			this.projectTeams.setSource(new ArrayList<ProjectTeam>()); // mettre liste des groups moins ceux déjà sélectionnés
 			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
 			
 		}
 	}
 	
-	public List<ProjectTeams> getStudents() {
-		List<ProjectTeams> students = new ArrayList<ProjectTeams>();
+	public List<ProjectTeam> getStudents() {
+		List<ProjectTeam> students = new ArrayList<ProjectTeam>();
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Student")) {
 				ResultSet resultSet = preparedStatement.executeQuery();
@@ -224,8 +218,8 @@ public class ProjectView implements Serializable {
 		return students;
 	}
 	
-	public List<ProjectTeams> availableStudents(Project project){
-		List<ProjectTeams> available = new ArrayList<ProjectTeams>(getStudents());
+	public List<ProjectTeam> availableStudents(Project project){
+		List<ProjectTeam> available = new ArrayList<ProjectTeam>(getStudents());
 		available.removeAll(project.getTeams());
 		return available;
 	}
@@ -277,7 +271,8 @@ public class ProjectView implements Serializable {
 				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Project")) {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
-	                  Project project = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeams>());
+	                  Project project = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeam>());
+	                  //project.addTeam(new Student("ddjlkd","flkdfk","michel","poil","ffjjfld",AccountCreation.Created));
 	                  //TO DO : ADD TEAM IF ANY  
 	                  projects.add(project);
 				 }

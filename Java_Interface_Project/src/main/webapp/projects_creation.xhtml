@@ -188,18 +188,18 @@
 						<p:outputPanel rendered="#{not empty projectView.selectedProjects.get(0)}">
 							<div class="field">
 								<p:pickList id="PojoPickList" value="#{projectView.projectTeams}"
-									var="projectTeams" effect="bounce" itemValue="#{projectTeams}"
-									itemLabel="#{projectTeams.displayName()}" showSourceControls="false"
+									var="projectTeam" effect="bounce" itemValue="#{projectTeam}"
+									itemLabel="#{projectTeam.displayName()}" showSourceControls="false"
 									showTargetControls="false" showCheckbox="false"
 									showSourceFilter="true" showTargetFilter="true"
-									filterMatchMode="contains" 
+									filterMatchMode="contains" converter="projectTeamConverter"
 									responsive="true">
 
 									<f:facet name="sourceCaption">Available</f:facet>
 									<f:facet name="targetCaption">Assigned</f:facet>
 
 									<p:column>
-										<h:outputText value="#{projectTeams.displayName()}" />
+										<h:outputText value="#{projectTeam.displayName()}" />
 									</p:column>
 								</p:pickList>
 							</div>
@@ -209,8 +209,7 @@
 					<f:facet name="footer">
 						<p:commandButton value="Save" icon="pi pi-check"
 							actionListener="#{projectView.saveTeams}"
-							update="manage-project-teams"
-							process="manage-project-teams @this" />
+							 />
 						<p:commandButton value="Cancel" icon="pi pi-times"
 							onclick="PF('manageProjectTeams').hide()"
 							class="ui-button-secondary" type="button" />
