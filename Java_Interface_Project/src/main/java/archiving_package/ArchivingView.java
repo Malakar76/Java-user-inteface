@@ -20,6 +20,8 @@ import org.primefaces.PrimeFaces;
 import project_package.Project;
 import project_package.ProjectService;
 import project_package.ProjectTeam;
+import student_package.AccountCreation;
+import student_package.Student;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -141,7 +143,9 @@ public class ArchivingView implements Serializable {
 				PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Archive WHERE id=?")) {
 				preparedStatement.setString(1, selectedArchive.getId());
 				preparedStatement.executeUpdate();
-				//TO DO : ADD DELETION OF TEAMS TABLE IF ANY
+				PreparedStatement preparedStatement2 = connection.prepareStatement("DELETE FROM Team WHERE id = ?");
+				preparedStatement2.setString(1, selectedArchive.getId());
+				preparedStatement2.executeUpdate();
 			} 	catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -154,7 +158,39 @@ public class ArchivingView implements Serializable {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
 	                  Project archive = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeam>());
-	                  //TO DO : ADD TEAM IF ANY  
+	                  try (PreparedStatement preparedStatement2 = connection
+	  						.prepareStatement("SELECT * FROM Team WHERE id =?")) {
+	  					preparedStatement2.setString(1, resultSet.getString("id"));
+	  					ResultSet resultSet2 = preparedStatement2.executeQuery();
+	  					if(resultSet2.next()) {
+	  					int columnCount = resultSet2.getMetaData().getColumnCount();
+	  					if (archive.getType().equals("Individual")) {
+	  						for (int i = 1; i <= columnCount; i++) {
+	  							try (PreparedStatement preparedStatement3 = connection
+	  									.prepareStatement("SELECT * FROM Student WHERE id = ?")) {
+	  								preparedStatement3.setString(1, resultSet2.getString(i));
+	  								ResultSet resultSet3 = preparedStatement3.executeQuery();
+	  								if (resultSet3.next()) {
+	  									Student student = new Student(resultSet3.getString("id"),
+	  											resultSet3.getString("code"), resultSet3.getString("firstName"),
+	  											resultSet3.getString("lastName"), resultSet3.getString("password"),
+	  											AccountCreation.NotCreated);
+	  									if (resultSet3.getString("accountCreation") == "Created") {
+	  										student.setAccountCreation(AccountCreation.Created);
+	  									} else {
+	  										student.setAccountCreation(AccountCreation.NotCreated);
+	  									}
+	  									archive.addTeam(student);
+	  								}
+
+	  							}
+
+	  						}}
+	  					} else {
+	  						// TODO MANAGE GROUP
+	  					}
+
+	  				} 
 	                  archives.add(archive);
 				 }
 		} catch (SQLException e) {

@@ -12,13 +12,17 @@ public class ProjectTeamConverter implements Converter {
 
 	@Override
     public ProjectTeam getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
-		System.out.println("getAsObject : "+value);
-        return Student.fromString(value);
+		if(value.charAt(0)=='1') {
+			return Student.fromString(value);
+		}else {
+			return null; //TODO: ADD METHOD FROM TEAM
+		}
+		
+        
     }
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
-    	System.out.println("getAsString: "+value.toString());
         if (value instanceof ProjectTeam) {
             return ((ProjectTeam)value).toString();
         }

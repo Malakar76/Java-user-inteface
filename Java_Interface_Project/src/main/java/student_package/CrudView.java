@@ -127,7 +127,7 @@ public class CrudView implements Serializable {
 
 	public void saveStudent() {
 		if (this.selectedStudent.getId() == null) {
-			this.selectedStudent.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+			this.selectedStudent.setId("1ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
 			this.students.add(this.selectedStudent);
 			if (createAccountCheck) {
 				createAccountForStudent(this.selectedStudent);
@@ -219,10 +219,10 @@ public class CrudView implements Serializable {
 	public void UpdateStudent(Student currentStudent) {
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(
-						"UPDATE Student SET (password = ?, accountCreation = ?) WHERE (id = ? ) ")) {
-			preparedStatement.setString(1, selectedStudent.getPassword());
-			preparedStatement.setString(2, selectedStudent.getAccountCreation().getText());
-			preparedStatement.setString(3, selectedStudent.getId());
+						"UPDATE Student SET password = ?, accountCreation = ? WHERE id = ?  ")) {
+			preparedStatement.setString(1, currentStudent.getPassword());
+			preparedStatement.setString(2, currentStudent.getAccountCreation().getText());
+			preparedStatement.setString(3, currentStudent.getId());
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -237,7 +237,7 @@ public class CrudView implements Serializable {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
 	                  Student student = new Student(resultSet.getString("id"),resultSet.getString("code"),resultSet.getString("firstName"),resultSet.getString("lastName"),resultSet.getString("password"),AccountCreation.NotCreated);
-	                   if (resultSet.getString("accountCreation")=="Created") {
+	                  if (resultSet.getString("accountCreation").equals("Created")) {
 	                	 student.setAccountCreation(AccountCreation.Created);
 	                   }else {
 	                	  student.setAccountCreation(AccountCreation.NotCreated);

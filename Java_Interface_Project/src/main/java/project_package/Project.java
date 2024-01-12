@@ -100,6 +100,9 @@ public class Project implements Serializable {
     }
     
     public void addTeam(ProjectTeam team) {
-    	this.projectTeams.add(team);
+    	if (team != null) {
+    		this.projectTeams.add(team);
+    	}
+    	
     }
 }
