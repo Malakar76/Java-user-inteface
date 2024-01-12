@@ -8,7 +8,7 @@
 	<title>Submission Track</title>
 	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
 	<style type="text/css">
-	.ui-dataview-list .ui-dataview-row {
+.ui-dataview-list .ui-dataview-row {
 	border-bottom: 1px solid #A8A8A8;
 	padding: 25px 10px;
 	/* with the exported variables from Nova and Luna Themes*/
@@ -29,9 +29,10 @@
 					class="fas fa-times"></i></label>
 				<li><a href="home.xhtml">Home</a></li>
 				<li><a href="student_list.xhtml">Student Management</a></li>
-				<li><a href="team.xhtml" class="desktop-item">Team Management</a></li>
-				<li><a href="projects_creation.xhtml" class="desktop-item">Projects</a> <input
-					type="checkbox" id="showDrop"></input> <label for="showDrop"
+				<li><a href="team.xhtml" class="desktop-item">Team
+						Management</a></li>
+				<li><a href="projects_creation.xhtml" class="desktop-item">Projects</a>
+					<input type="checkbox" id="showDrop"></input> <label for="showDrop"
 					class="mobile-item">Projects</label>
 					<ul class="drop-menu">
 						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
@@ -50,7 +51,7 @@
 		<div class="card crud-demo">
 			<h:form id="form">
 				<p:growl id="messages" showDetail="true" />
-				
+
 				<p:toolbar>
 					<p:toolbarGroup>
 						<p:commandButton value="Refresh" icon="pi pi-refresh"
@@ -60,9 +61,9 @@
 						</p:commandButton>
 
 					</p:toolbarGroup>
-			
+
 				</p:toolbar>
-				
+
 				<p:dataView var="project" value="#{submissionView.projects}"
 					gridIcon="pi pi-th-large" listIcon="pi pi-bars" id="dt-project"
 					widgetVar="dt-project">
@@ -114,14 +115,14 @@
 					</p:dataViewListItem>
 
 				</p:dataView>
-				
+
 
 			</h:form>
 
 			<h:form id="dialogs">
-			
+
 				<p:dialog header="Project Info" widgetVar="projectDialog"
-					modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="50%">
 					<p:outputPanel id="projectDetail" style="text-align:center;">
 						<p:panelGrid columns="2"
 							rendered="#{not empty submissionView.selectedProject}">
@@ -137,9 +138,16 @@
 							<h:outputText value="Type:" />
 							<h:outputText value="#{submissionView.selectedProject.type}" />
 
-							<h:outputText value="Teams:" />
-							<p:orderList value="#{submissionView.selectedProject.projectTeams}" var="team" controlsLocation="none" itemLabel="#{team.displayName()}" itemValue="#{team.displayName()}" />
+							<h:outputText value="Teams:"  />
+							<p:dataTable var="team" value="#{submissionView.selectedProject.projectTeams}" scrollable="true" scrollHeight="200">
+								<p:column headerText="Team" style="text-align:center;">
+									<h:outputText value="#{team.displayName()}" />
+								</p:column>
 
+								<p:column headerText="Status" style="text-align:center;">
+									<h:outputText value="Pending" />
+								</p:column>
+								</p:dataTable>
 						</p:panelGrid>
 					</p:outputPanel>
 				</p:dialog>

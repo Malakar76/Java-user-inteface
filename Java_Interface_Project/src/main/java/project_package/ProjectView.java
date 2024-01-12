@@ -130,7 +130,9 @@ public class ProjectView implements Serializable {
 		this.selectedProjects.get(0).setProjectTeams(this.projectTeams.getTarget());
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Saved"));
 		PrimeFaces.current().ajax().update("form:messages");
+		PrimeFaces.current().executeScript("PF('dtProjects').clearFilters()");
 		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
+		
 	}
 
 	public String getDeleteButtonMessage() {
@@ -249,7 +251,7 @@ public class ProjectView implements Serializable {
 			preparedStatement.setString(3, selectedProject.getName());
 			preparedStatement.setString(4, selectedProject.getType());
 			preparedStatement.executeUpdate();
-		try (PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Team (id, teammate, submit) VALUES (?, '', 'Pending')")){
+		try (PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Team (id, teammate, submit) VALUES (?, '', '')")){
 			preparedStatement2.setString(1, selectedProject.getId());
 			preparedStatement2.executeUpdate();
 			
@@ -354,13 +356,34 @@ public class ProjectView implements Serializable {
 	
 	public void addRemoveTeammates (List<ProjectTeam> toAddRemove, Project selectedProject) {
 		String idList = "";
-		for (ProjectTeam teammate : toAddRemove) {
-			idList += (teammate.getId()+":");
-		}
+		String submitList = "";
+		String [] parts;
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ? WHERE id = ?")) {
+				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Team WHERE id= ?")) {
+			preparedStatement.setString(1, selectedProject.getId());
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				parts = resultSet.getString("submit").split(":");
+				for (ProjectTeam teammate : toAddRemove) {
+					idList += (teammate.getId()+":");
+					for (int i=0; i<selectedProject.getProjectTeams().size();i++){
+						if (teammate.getId().equals(selectedProject.getProjectTeams().get(i).getId())) {
+							submitList += (parts[i]+":");
+						}else {
+							submitList += "Pending:";
+						}
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ?, submit = ? WHERE id = ?")) {
 			preparedStatement.setString(1, idList);
-			preparedStatement.setString(2, selectedProject.getId());
+			preparedStatement.setString(2, submitList);
+			preparedStatement.setString(3, selectedProject.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
