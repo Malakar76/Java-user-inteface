@@ -11,22 +11,25 @@ public class Project implements Serializable {
     private String name;
     private String type;
     private List<ProjectTeam> projectTeams;
+    private List<String> submited;
 
     public Project() {
     	this.projectTeams = new ArrayList<ProjectTeam>();
+    	this.submited = new ArrayList<String>();
     }
 
-    public Project(String id, String description, String name,  String type, List<ProjectTeam> projectTeams) {
+    public Project(String id, String description, String name,  String type, List<ProjectTeam> projectTeams, List<String> submited) {
         this.id = id;
         this.description = description;
         this.name = name;
         this.type = type;
         this.projectTeams = projectTeams;
+        this.submited=submited;
     }
 
     @Override
     public Project clone() {
-        return new Project(getId(), getDescription(), getName(), getType(), getProjectTeams());
+        return new Project(getId(), getDescription(), getName(), getType(), getProjectTeams(), getSubmited());
     }
 
     // Getters and Setters
@@ -45,7 +48,15 @@ public class Project implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
+    public List<String> getSubmited() {
+		return submited;
+	}
+
+	public void setSubmited(List<String> submited) {
+		this.submited = submited;
+	}
+
+	public void setId(String id) {
         this.id = id;
     }
 
@@ -106,17 +117,7 @@ public class Project implements Serializable {
     	
     }
     
-    public String getTeamsList() {
-    	String result = "";
-    	if (this.getType().equals("Individual")) {
-    		for (ProjectTeam team : this.getProjectTeams()) {
-    			result += (team.displayName()+"\n");
-    		}
-    		return result;
-    	}else {
-    		return result; //TODO : Case of Group Teams
-    	}
-		
-		
+    public void addSubmit (String value) {
+    	this.submited.add(value);
 	}
 }

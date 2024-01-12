@@ -136,6 +136,12 @@ public class ArchivingView implements Serializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Team (id VARCHAR(255), teammate TEXT, submit TEXT)")) {
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void DeleteArchive(Project selectedArchive) {
@@ -157,7 +163,7 @@ public class ArchivingView implements Serializable {
 				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Archive")) {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				 while (resultSet.next()) {
-	                  Project archive = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeam>());
+	                  Project archive = new Project(resultSet.getString("id"),resultSet.getString("description"),resultSet.getString("name"),resultSet.getString("type"),new ArrayList<ProjectTeam>(), new ArrayList<String>());
 	                  try (PreparedStatement preparedStatement2 = connection
 	  						.prepareStatement("SELECT * FROM Team WHERE id =?")) {
 	  					preparedStatement2.setString(1, resultSet.getString("id"));

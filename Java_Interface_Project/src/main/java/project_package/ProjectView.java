@@ -233,7 +233,7 @@ public class ProjectView implements Serializable {
 			e.printStackTrace();
 		}
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Team (id VARCHAR(255), teammate TEXT)")) {
+				PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Team (id VARCHAR(255), teammate TEXT, submit TEXT)")) {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -249,7 +249,7 @@ public class ProjectView implements Serializable {
 			preparedStatement.setString(3, selectedProject.getName());
 			preparedStatement.setString(4, selectedProject.getType());
 			preparedStatement.executeUpdate();
-		try (PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Team (id, teammate) VALUES (?, '')")){
+		try (PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Team (id, teammate, submit) VALUES (?, '', 'Pending')")){
 			preparedStatement2.setString(1, selectedProject.getId());
 			preparedStatement2.executeUpdate();
 			
@@ -293,7 +293,7 @@ public class ProjectView implements Serializable {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				Project project = new Project(resultSet.getString("id"), resultSet.getString("description"),
-						resultSet.getString("name"), resultSet.getString("type"), new ArrayList<ProjectTeam>());
+						resultSet.getString("name"), resultSet.getString("type"), new ArrayList<ProjectTeam>(),new ArrayList<String>());
 				try (PreparedStatement preparedStatement2 = connection.prepareStatement("SELECT * FROM Team WHERE id =?")) {
 					preparedStatement2.setString(1, resultSet.getString("id"));
 					ResultSet resultSet2 = preparedStatement2.executeQuery();
@@ -367,6 +367,8 @@ public class ProjectView implements Serializable {
 		}
 		
 	}
+	
+	
 	
 
 }
