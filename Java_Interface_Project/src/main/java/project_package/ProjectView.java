@@ -127,7 +127,7 @@ public class ProjectView implements Serializable {
 
 	public void saveTeams() {
 		UpdateProject(selectedProjects.get(0));
-		this.selectedProjects.get(0).setTeams(this.projectTeams.getTarget());
+		this.selectedProjects.get(0).setProjectTeams(this.projectTeams.getTarget());
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Saved"));
 		PrimeFaces.current().ajax().update("form:messages");
 		PrimeFaces.current().executeScript("PF('manageProjectTeams').hide()");
@@ -187,14 +187,11 @@ public class ProjectView implements Serializable {
 
 	public void editTeams() {
 		if (this.selectedProjects.get(0).getType().equals("Individual")) {
-			this.projectTeams.setSource(availableStudents(this.selectedProjects.get(0))); // mettre liste des élèves
-																							// moins ceux déjà
-																							// sélectionnés
-			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
+			this.projectTeams.setSource(availableStudents(this.selectedProjects.get(0))); 
+			this.projectTeams.setTarget(this.selectedProjects.get(0).getProjectTeams());
 		} else {
-			this.projectTeams.setSource(new ArrayList<ProjectTeam>()); // mettre liste des groups moins ceux déjà
-																		// sélectionnés
-			this.projectTeams.setTarget(this.selectedProjects.get(0).getTeams());
+			this.projectTeams.setSource(new ArrayList<ProjectTeam>());
+			this.projectTeams.setTarget(this.selectedProjects.get(0).getProjectTeams());
 
 		}
 	}
@@ -223,7 +220,7 @@ public class ProjectView implements Serializable {
 
 	public List<ProjectTeam> availableStudents(Project project) {
 		List<ProjectTeam> available = new ArrayList<ProjectTeam>(getStudents());
-		available.removeAll(project.getTeams());
+		available.removeAll(project.getProjectTeams());
 		return available;
 	}
 
@@ -236,7 +233,7 @@ public class ProjectView implements Serializable {
 			e.printStackTrace();
 		}
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Team (id VARCHAR(255))")) {
+				PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Team (id VARCHAR(255), teammate TEXT)")) {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -276,10 +273,13 @@ public class ProjectView implements Serializable {
 
 	public void UpdateProject(Project selectedProject) {
 		List<ProjectTeam> toAdd = new ArrayList<ProjectTeam>(this.projectTeams.getTarget());
-		toAdd.removeAll(selectedProject.getTeams());
-		List<ProjectTeam> toRemove = new ArrayList<ProjectTeam>(selectedProject.getTeams());
+		toAdd.removeAll(selectedProject.getProjectTeams());
+		List<ProjectTeam> toRemove = new ArrayList<ProjectTeam>(selectedProject.getProjectTeams());
 		toRemove.retainAll(this.projectTeams.getSource());
-		//TODO REMOVE AND ADD NEW TEAMMATES
+		List<ProjectTeam> toAddRemove = new ArrayList<ProjectTeam>(selectedProject.getProjectTeams());
+		toAddRemove.removeAll(toRemove);
+		toAddRemove.addAll(toAdd);
+		addRemoveTeammates(toAddRemove,selectedProject);
 	}
 
 	public List<Project> getProjectsTable() {
@@ -294,12 +294,12 @@ public class ProjectView implements Serializable {
 					preparedStatement2.setString(1, resultSet.getString("id"));
 					ResultSet resultSet2 = preparedStatement2.executeQuery();
 					if(resultSet2.next()) {
-					int columnCount = resultSet2.getMetaData().getColumnCount();
+						String [] parts = resultSet2.getString("teammates").split(":");
 					if (project.getType().equals("Individual")) {
-						for (int i = 1; i <= columnCount; i++) {
+						for (int i = 1; i <= parts.length; i++) {
 							try (PreparedStatement preparedStatement3 = connection
 									.prepareStatement("SELECT * FROM Student WHERE id = ?")) {
-								preparedStatement3.setString(1, resultSet2.getString(i));
+								preparedStatement3.setString(1, parts[i]);
 								ResultSet resultSet3 = preparedStatement3.executeQuery();
 								if (resultSet3.next()) {
 									Student student = new Student(resultSet3.getString("id"),
@@ -347,5 +347,22 @@ public class ProjectView implements Serializable {
 			}
 		}
 	}
+	
+	public void addRemoveTeammates (List<ProjectTeam> toAddRemove, Project selectedProject) {
+		String idList = "";
+		for (ProjectTeam teammate : toAddRemove) {
+			idList += (teammate.getId()+":");
+		}
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ? WHERE id = ?")) {
+			preparedStatement.setString(1, idList);
+			preparedStatement.setString(2, selectedProject.getId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 }

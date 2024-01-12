@@ -6,5 +6,7 @@ public interface ProjectTeam {
 	
 	public String toString();
 	
+	public String getId();
+	
 	
 }

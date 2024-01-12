@@ -163,12 +163,12 @@ public class ArchivingView implements Serializable {
 	  					preparedStatement2.setString(1, resultSet.getString("id"));
 	  					ResultSet resultSet2 = preparedStatement2.executeQuery();
 	  					if(resultSet2.next()) {
-	  					int columnCount = resultSet2.getMetaData().getColumnCount();
+	  						String [] parts = resultSet2.getString("teammates").split(":");
 	  					if (archive.getType().equals("Individual")) {
-	  						for (int i = 1; i <= columnCount; i++) {
+	  						for (int i = 1; i <= parts.length; i++) {
 	  							try (PreparedStatement preparedStatement3 = connection
 	  									.prepareStatement("SELECT * FROM Student WHERE id = ?")) {
-	  								preparedStatement3.setString(1, resultSet2.getString(i));
+	  								preparedStatement3.setString(1, parts[i]);
 	  								ResultSet resultSet3 = preparedStatement3.executeQuery();
 	  								if (resultSet3.next()) {
 	  									Student student = new Student(resultSet3.getString("id"),

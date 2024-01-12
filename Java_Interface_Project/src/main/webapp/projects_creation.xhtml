@@ -185,7 +185,7 @@
 				<p:dialog header="Project Teams" showEffect="fade" modal="true"
 					widgetVar="manageProjectTeams" responsive="true">
 					<p:outputPanel id="manage-project-teams" class="ui-fluid">
-						<p:outputPanel rendered="#{not empty projectView.selectedProjects.get(0)}">
+						<p:outputPanel>
 							<div class="field">
 								<p:pickList id="PojoPickList" value="#{projectView.projectTeams}"
 									var="projectTeam" effect="bounce" itemValue="#{projectTeam}"

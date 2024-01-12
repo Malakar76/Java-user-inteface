@@ -26,16 +26,16 @@ public class Project implements Serializable {
 
     @Override
     public Project clone() {
-        return new Project(getId(), getDescription(), getName(), getType(), getTeams());
+        return new Project(getId(), getDescription(), getName(), getType(), getProjectTeams());
     }
 
     // Getters and Setters
 
-    public List<ProjectTeam> getTeams(){
+    public List<ProjectTeam> getProjectTeams(){
     	return projectTeams;
     }
     
-    public void setTeams(List<ProjectTeam> projectTeams) {
+    public void setProjectTeams(List<ProjectTeam> projectTeams) {
     	this.projectTeams = new ArrayList<ProjectTeam>();
     	this.projectTeams.addAll(projectTeams);
     			
