@@ -105,4 +105,18 @@ public class Project implements Serializable {
     	}
     	
     }
+    
+    public String getTeamsList() {
+    	String result = "";
+    	if (this.getType().equals("Individual")) {
+    		for (ProjectTeam team : this.getProjectTeams()) {
+    			result += (team.displayName()+"\n");
+    		}
+    		return result;
+    	}else {
+    		return result; //TODO : Case of Group Teams
+    	}
+		
+		
+	}
 }

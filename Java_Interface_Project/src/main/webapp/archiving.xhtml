@@ -102,16 +102,19 @@
 						<h:panelGroup
 							style="display: flex; justify-content: space-between; align-items: center; width: 100%">
 							<h:panelGroup style="flex: 1;">
-								<h:outputText value="#{archive.name}" style="font-weight: bold;  margin-right: 10px;" />
+								<h:outputText value="#{archive.name}"
+									style="font-weight: bold;  margin-right: 10px;" />
 							</h:panelGroup>
 
-							<h:panelGroup style="flex: 1; overflow: hidden; margin-right: 10px;">
+							<h:panelGroup
+								style="flex: 1; overflow: hidden; margin-right: 10px;">
 								<h:outputText value="#{archive.description}"
 									style="font-weight: bold" />
 							</h:panelGroup>
 
 							<h:panelGroup style="flex: 1;">
-								<h:outputText value="#{archive.type}" style="font-weight: bold; margin-right: 10px;" />
+								<h:outputText value="#{archive.type}"
+									style="font-weight: bold; margin-right: 10px;" />
 							</h:panelGroup>
 
 							<h:panelGroup>
@@ -151,17 +154,16 @@
 
 							<h:outputText value="Type:" />
 							<h:outputText value="#{archivingView.selectedArchive.type}" />
-							
-							<h:outputText value = "Teams:"/>
-							<h:outputText value = "#{archivingView.selectedArchive.projectTeams}" />
 
+							<h:outputText value="Teams:" />
+							<p:orderList value="#{archivingView.selectedArchive.projectTeams}" var="team" controlsLocation="none" itemLabel="#{team.displayName()}" itemValue="#{team.displayName()}" />
 
 						</p:panelGrid>
-						<p:spacer height="50px" /> 
+						<p:spacer height="50px" />
 						<p:commandButton id="delete-archive-button" value="Delete"
 							icon="pi pi-trash"
 							actionListener="#{archivingView.deleteSelectedArchive}"
-							styleClass="ui-button-danger" >
+							styleClass="ui-button-danger">
 							<f:setPropertyActionListener
 								value="#{archivingView.selectedArchive}"
 								target="#{archivingView.selectedArchive}" />

@@ -298,7 +298,6 @@ public class ProjectView implements Serializable {
 					preparedStatement2.setString(1, resultSet.getString("id"));
 					ResultSet resultSet2 = preparedStatement2.executeQuery();
 					if(resultSet2.next()) {
-						System.out.println("getTeam: "+resultSet2.getString("teammate"));
 						String [] parts = resultSet2.getString("teammate").split(":");
 					if (project.getType().equals("Individual")) {
 						for (int i = 0; i < parts.length; i++) {
@@ -358,7 +357,6 @@ public class ProjectView implements Serializable {
 		for (ProjectTeam teammate : toAddRemove) {
 			idList += (teammate.getId()+":");
 		}
-		System.out.println("saveList: "+idList);
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ? WHERE id = ?")) {
 			preparedStatement.setString(1, idList);
