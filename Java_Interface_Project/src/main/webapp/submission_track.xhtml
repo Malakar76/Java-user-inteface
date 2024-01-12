@@ -5,8 +5,10 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-	<title>Landpage Admin</title>
+	<title>Submission Track</title>
 	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+	<style type="text/css">
+</style>
 </h:head>
 <body>
 	<nav>
@@ -20,9 +22,9 @@
 				<label for="close-btn" class="btn close-btn"><i
 					class="fas fa-times"></i></label>
 				<li><a href="home.xhtml">Home</a></li>
-				<li><a href="student_list.xhtml">Student Management</a> <input
-					type="checkbox" id="showDrop"></input> <label for="showDrop"
-					class="mobile-item">Student Management</label>
+				<li><a href="student_list.xhtml" class="desktop-item">Student
+						Management</a> <input type="checkbox" id="showDrop"></input> <label
+					for="showDrop" class="mobile-item">Student Management</label>
 					<ul class="drop-menu">
 						<li><a href="student_list.xhtml">Student List</a></li>
 						<li><a href="#">Account creation</a></li>
@@ -34,8 +36,8 @@
 						<li><a href="#">Team List</a></li>
 						<li><a href="#">Team creation</a></li>
 					</ul></li>
-				<li><a href="projects_creation.xhtml" class="desktop-item">Projects</a> <input
-					type="checkbox" id="showDrop"></input> <label for="showDrop"
+				<li><a href="projects_creation.xhtml" class="desktop-item">Projects</a>
+					<input type="checkbox" id="showDrop"></input> <label for="showDrop"
 					class="mobile-item">Projects</label>
 					<ul class="drop-menu">
 						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
@@ -49,21 +51,27 @@
 		</div>
 	</nav>
 
-	<div class="body-text">
-		<div class="video-container">
-			<div class="card video-card">
-				<p:video value="https://www.w3schools.com/html/mov_bbb.mp4"
-					player="mp4" controls="true" width="960" height="540"
-					onplay="console.log('MP4 Started Playing')"
-					onpause="console.log('MP4 Stopped Playing')">
-        	Your browser does not support the video element.
-        	See: <h:outputLink
-						value="https://www.w3schools.com/html/html5_video.asp">HTML5 Video</h:outputLink>
-				</p:video>
-				<div class="video-title">
-					<h2>How to Use the Admin Interface</h2>
-				</div>
-			</div>
+	<div class="body">
+		<div class="card crud-demo">
+			<h:form id="form">
+				<p:growl id="messages" showDetail="true" />
+
+				<p:toolbar>
+					
+				</p:toolbar>
+
+			</h:form>
+
+			<h:form id="dialogs">
+
+				<p:confirmDialog global="true" showEffect="fade" width="300">
+					<p:commandButton value="Yes" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no ui-button-secondary"
+						icon="pi pi-times" />
+				</p:confirmDialog>
+			</h:form>
 		</div>
 	</div>
 </body>
