@@ -34,6 +34,10 @@ The datas in  the following tables are here as exemple. For this example you'll 
 - JDK : 17
 - Tomcat : 9.0.84
 # TODO : Remaining List 
+- Add the login Page (Kilyan)
+- Finish the implementation of Team (Kilyan)
+- Finish the implementation of a Team Project (Robin)
+- Finish the submission Track page (Robin)
 - Manage import of Students via CSV file
 - Manage import of Projects via CSV file
 - Manage import of Teams via CSV file
