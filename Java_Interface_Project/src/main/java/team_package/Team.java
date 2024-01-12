@@ -2,41 +2,42 @@ package team_package;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
+
+import student_package.AccountCreation;
+import student_package.Student;
 import project_package.ProjectTeam;
 
 @SuppressWarnings("serial")
-public class Team implements Serializable {
+public class Team implements Serializable, ProjectTeam {
 
     private String id;
-    private String description;
     private String name;
-    private List<ProjectTeam> students;
+    private List<Student> students;
 
     public Team() {
-    	this.students = new ArrayList<ProjectTeam>();
+    	this.students = new ArrayList<Student>();
     }
 
-    public Team(String id, String description, String name, List<ProjectTeam> students) {
+    public Team(String id, String name, List<Student> students) {
         this.id = id;
-        this.description = description;
         this.name = name;
         this.students = students;
     }
 
     @Override
     public Team clone() {
-        return new Team(getId(), getDescription(), getName(), getTeams());
+        return new Team(getId(), getName(), getStudents());
     }
 
     // Getters and Setters
 
-    public List<ProjectTeam> getTeams(){
+    public List<Student> getStudents(){
     	return students;
     }
     
-    public void setProjectTeams(List<ProjectTeam> projectTeams) {
-    	this.students = new ArrayList<ProjectTeam>();
-    	this.students.addAll(projectTeams);
+    public void setProjectTeams(List<Student> students) {
+    	this.students = new ArrayList<Student>();
+    	this.students.addAll(students);
     			
     }
     
@@ -47,15 +48,7 @@ public class Team implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+  
     public String getName() {
         return name;
     }
@@ -89,18 +82,53 @@ public class Team implements Serializable {
         }
     }
     
-    public void addTeam(ProjectTeam students) {
-    	if (students != null) {
-    		this.students.add(students);
+    public void addStudent(Student student) {
+    	if (student != null) {
+    		this.students.add(student);
     	}
     	
     }
     
     public String getTeamsList() {
     	String result = "";
-    	for (ProjectTeam team : this.getTeams()) {
+    	for (ProjectTeam team : this.getStudents()) {
     		result += (team.displayName()+"\n");
     		}
     		return result;
     }
+
+    public String displayName() {
+    	return this.name;
+    }
+    
+    public String toString() {
+    	String result = (id+":"+name+":");
+    	for (Student student : students){
+    		result+=(student.toString()+":");
+    }
+    	return result;
+}
+
+	public static Team fromString(String value) {
+    	String [] parts = value.split(":");
+    	Team team = new Team();
+    	team.setId(parts[0]);
+    	team.setName(parts[1]);
+    	int size = (parts.length-2)/6;
+    	for (int i=0; i<size; i++){
+        	Student student = new Student();
+        	student.setId(parts[(i*6)+2]);
+        	student.setCode(parts[(i*6)+3]);
+        	student.setFirstName(parts[(i*6)+4]);
+        	student.setLastName(parts[(i*6)+5]);
+        	if (parts[6].equals("Created")) {
+        		student.setPassword(parts[(i*6)+ 6]);
+        		student.setAccountCreation(AccountCreation.Created);
+        	}else {
+        		student.setAccountCreation(AccountCreation.NotCreated);
+        	}
+        	team.addStudent(student); 	    	
+    	}
+    	return team;
+	}
 }

@@ -6,20 +6,16 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 import student_package.Student;
-import project_package.ProjectTeam;
 
-@FacesConverter(value = "TeamConverter")
+@FacesConverter(value = "teamConverter")
 public class TeamConverter implements Converter {
 
 	@Override
-    public ProjectTeam getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
-			return Student.fromString(value);
+    public Team getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
+			return Team.fromString(value);
 	}
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
-        if (value instanceof ProjectTeam) {
-            return ((ProjectTeam)value).toString();
-        }
-        return null;
+    		return ((Team)value).toString();
     }
 }

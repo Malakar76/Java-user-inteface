@@ -107,8 +107,8 @@
                             <div class="field">
                                 <p:outputLabel for="teamMembers">Team Members</p:outputLabel>
                                 <p:pickList value="#{teamView.teamMembers}" var="student" 
-                                            itemLabel="#{student.name}" itemValue="#{student}" 
-                                            converter="studentConverter">
+                                            itemLabel="#{team.name}" itemValue="#{team}" 
+                                            converter="teamConverter">
                                     <f:facet name="sourceCaption">Available Students</f:facet>
                                     <f:facet name="targetCaption">Selected Members</f:facet>
                                 </p:pickList>
