@@ -249,7 +249,11 @@ public class ProjectView implements Serializable {
 			preparedStatement.setString(3, selectedProject.getName());
 			preparedStatement.setString(4, selectedProject.getType());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
+		try (PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Team (id, teammate) VALUES (?, '')")){
+			preparedStatement2.setString(1, selectedProject.getId());
+			preparedStatement2.executeUpdate();
+			
+		}} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -294,9 +298,10 @@ public class ProjectView implements Serializable {
 					preparedStatement2.setString(1, resultSet.getString("id"));
 					ResultSet resultSet2 = preparedStatement2.executeQuery();
 					if(resultSet2.next()) {
-						String [] parts = resultSet2.getString("teammates").split(":");
+						System.out.println("getTeam: "+resultSet2.getString("teammate"));
+						String [] parts = resultSet2.getString("teammate").split(":");
 					if (project.getType().equals("Individual")) {
-						for (int i = 1; i <= parts.length; i++) {
+						for (int i = 0; i < parts.length; i++) {
 							try (PreparedStatement preparedStatement3 = connection
 									.prepareStatement("SELECT * FROM Student WHERE id = ?")) {
 								preparedStatement3.setString(1, parts[i]);
@@ -353,6 +358,7 @@ public class ProjectView implements Serializable {
 		for (ProjectTeam teammate : toAddRemove) {
 			idList += (teammate.getId()+":");
 		}
+		System.out.println("saveList: "+idList);
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ? WHERE id = ?")) {
 			preparedStatement.setString(1, idList);
