@@ -14,7 +14,7 @@ public class ProjectTeamConverter implements Converter {
 	@Override
     public ProjectTeam getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
 		if(value.charAt(0)=='1') {
-			return Student.fromString(value);
+			return ((ProjectTeam)Student.fromString(value));
 		}else {
 			return Team.fromString(value);
 		}

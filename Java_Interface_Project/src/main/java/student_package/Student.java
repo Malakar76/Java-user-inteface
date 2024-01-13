@@ -116,9 +116,9 @@ public class Student implements Serializable , ProjectTeam{
     	return (id+":"+code+":"+firstName+":"+lastName+":"+password+":"+accountCreation);
     }
     
-    public static ProjectTeam fromString(String value) {
+    public static Student fromString(String value) {
     	String [] parts = value.split(":");
-    	ProjectTeam team = new Student();
+    	Student team = new Student();
     	((Student)team).setId(parts[0]);
     	((Student)team).setCode(parts[1]);
     	((Student)team).setFirstName(parts[2]);

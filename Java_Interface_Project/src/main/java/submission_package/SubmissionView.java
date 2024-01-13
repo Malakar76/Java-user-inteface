@@ -114,7 +114,6 @@ public class SubmissionView implements Serializable{
 									} else {
 										student.setAccountCreation(AccountCreation.NotCreated);
 									}
-									System.out.println(partsSubmit[i]);
 									project.addTeam(student);
 									project.addSubmit(partsSubmit[i]);
 								}

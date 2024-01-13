@@ -5,15 +5,17 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+import student_package.Student;
+
 @FacesConverter(value = "teamConverter")
 public class TeamConverter implements Converter {
 
 	@Override
-    public Team getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
-			return Team.fromString(value);
+    public Student getAsObject(FacesContext facesContext, UIComponent uiComponent, String value) {
+			return Student.fromString(value);
 	}
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value) {
-    		return ((Team)value).toString();
+    		return ((Student)value).toString();
     }
 }

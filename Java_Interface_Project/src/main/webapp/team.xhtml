@@ -123,7 +123,7 @@
 							<div class="field">
 								<p:pickList id="TeamPickList" value="#{teamView.teamMembers}"
 								             var="student" effect="bounce" itemValue="#{student}"
-								             itemLabel="#{student.displayName}" showSourceControls="false"
+								             itemLabel="#{student.displayName()}" showSourceControls="false"
 								             showTargetControls="false" showCheckbox="false"
 								             showSourceFilter="true" showTargetFilter="true"
 								             filterMatchMode="contains" converter="teamConverter"
@@ -133,7 +133,7 @@
 								    <f:facet name="targetCaption">Assigned</f:facet>
 								
 								    <p:column>
-								        <h:outputText value="#{student.displayName}" />
+								        <h:outputText value="#{student.displayName()}" />
 								    </p:column>
 								</p:pickList>
 								 </div>
@@ -142,7 +142,7 @@
 
                     <f:facet name="footer">
                         <p:commandButton value="Save" icon="pi pi-check" actionListener="#{teamView.saveTeam}"
-                                         update=":form:dt-teams" oncomplete="PF('manageTeamDialog').hide()" />
+                                         update=":form:dt-teams" process="manage-team-content @this" />
                         <p:commandButton value="Cancel" icon="pi pi-times"
                                          onclick="PF('manageTeamDialog').hide()" type="button" />
                     </f:facet>

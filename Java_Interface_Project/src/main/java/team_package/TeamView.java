@@ -183,11 +183,13 @@ public class TeamView implements Serializable {
 
 	public void openNew() {
 		this.selectedTeam = new Team();
+		this.teamMembers.setSource(getStudents());
+		this.teamMembers.setTarget(new ArrayList<Student>());
 	}
 
 	public void saveTeam() {
 		if (this.selectedTeam.getId() == null) {
-			this.selectedTeam.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+			this.selectedTeam.setId("0GR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
 			this.teams.add(this.selectedTeam);
 			AddTeam(selectedTeam);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Team Added"));
