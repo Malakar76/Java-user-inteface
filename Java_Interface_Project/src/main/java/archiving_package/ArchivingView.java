@@ -22,6 +22,7 @@ import project_package.ProjectService;
 import project_package.ProjectTeam;
 import student_package.AccountCreation;
 import student_package.Student;
+import team_package.Team;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -191,9 +192,21 @@ public class ArchivingView implements Serializable {
 
 	  							}
 
-	  						}}
+	  						}
 	  					} else {
-	  						// TODO MANAGE GROUP
+	  						for (int i = 0; i < parts.length; i++) {
+								try (PreparedStatement preparedStatement3 = connection
+										.prepareStatement("SELECT * FROM Groupe WHERE id = ?")) {
+									preparedStatement3.setString(1, parts[i]);
+									ResultSet resultSet3 = preparedStatement3.executeQuery();
+									if (resultSet3.next()) {
+										Team team = new Team(resultSet3.getString("id"),resultSet3.getString("name"),new ArrayList<Student>());
+										archive.addTeam(team);
+									}
+
+								}}
+
+							}
 	  					}
 
 	  				} 

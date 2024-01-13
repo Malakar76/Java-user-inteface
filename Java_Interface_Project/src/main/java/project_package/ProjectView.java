@@ -15,6 +15,8 @@ import org.primefaces.model.DualListModel;
 
 import student_package.AccountCreation;
 import student_package.Student;
+import team_package.Team;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -192,7 +194,7 @@ public class ProjectView implements Serializable {
 			this.projectTeams.setSource(availableStudents(this.selectedProjects.get(0))); 
 			this.projectTeams.setTarget(this.selectedProjects.get(0).getProjectTeams());
 		} else {
-			this.projectTeams.setSource(new ArrayList<ProjectTeam>());
+			this.projectTeams.setSource(availableTeams(this.selectedProjects.get(0)));
 			this.projectTeams.setTarget(this.selectedProjects.get(0).getProjectTeams());
 
 		}
@@ -219,12 +221,36 @@ public class ProjectView implements Serializable {
 		}
 		return students;
 	}
+	
+	public List<ProjectTeam> getTeams() {
+		List<ProjectTeam> teams = new ArrayList<ProjectTeam>();
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Groupe")) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Team team = new Team(resultSet.getString("id"), resultSet.getString("name"),new ArrayList<Student>());
+				
+				teams.add(team);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return teams;
+	}
 
 	public List<ProjectTeam> availableStudents(Project project) {
 		List<ProjectTeam> available = new ArrayList<ProjectTeam>(getStudents());
 		available.removeAll(project.getProjectTeams());
 		return available;
 	}
+	
+	public List<ProjectTeam> availableTeams(Project project) {
+		List<ProjectTeam> available = new ArrayList<ProjectTeam>(getTeams());
+		available.removeAll(project.getProjectTeams());
+		return available;
+	}
+	
+	
 
 	public void checkInitTable() {
 		try (Connection connection = dataSource.getConnection();
@@ -324,7 +350,19 @@ public class ProjectView implements Serializable {
 
 						}
 					} else {
-						// TODO MANAGE GROUP
+						for (int i = 0; i < parts.length; i++) {
+							try (PreparedStatement preparedStatement3 = connection
+									.prepareStatement("SELECT * FROM Groupe WHERE id = ?")) {
+								preparedStatement3.setString(1, parts[i]);
+								ResultSet resultSet3 = preparedStatement3.executeQuery();
+								if (resultSet3.next()) {
+									Team team = new Team(resultSet3.getString("id"),resultSet3.getString("name"),new ArrayList<Student>());
+									project.addTeam(team);
+								}
+
+							}
+
+						}
 					}}
 
 				}

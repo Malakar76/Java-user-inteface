@@ -8,7 +8,7 @@ The data in  the following tables are here as example. For this example you'll f
 |:--:|:----:|:---------:|:--------:|:--------:|:---------------:|
 |  A |  abc |    fred   |  mercury |  ******  |     Created     |
 |  B |  def |   michel  | polnaref |  ******  |    NotCreated   |  
-### Group  
+### Groupe  
 | id |     name   | student |
 |:--:|:----------:|:-------:|
 |  D |   BroTeam  |   A:B:  |  
@@ -45,7 +45,6 @@ It will open a web page and there set :
 # TODO : Remaining List 
 - Add the login Page (Kilyan)
 - Finish the implementation of Team (Kilyan)
-- Finish the implementation of a Team Project (Robin)
 - Student View for submission of files (or directly when files are put on submission folder, so no Student View needed)
 - Manage import of Students via CSV file
 - Manage import of Projects via CSV file
