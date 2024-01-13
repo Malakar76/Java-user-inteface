@@ -121,7 +121,7 @@
                     <p:outputPanel id="manage-team-content">
                         <p:outputPanel rendered="#{not empty teamView.selectedTeam}">
                             <div class="field">
-                                <p:outputLabel for="teamName">Name</p:outputLabel>
+                                <p:outputLabel for="teamName">Name : </p:outputLabel>
                                 <p:inputText id="teamName" value="#{teamView.selectedTeam.name}" required="true" />
                             </div>
 							<div class="field">

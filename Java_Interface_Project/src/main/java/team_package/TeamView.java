@@ -20,8 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
-
-import project_package.ProjectTeam;
 import student_package.AccountCreation;
 import student_package.Student;
 
