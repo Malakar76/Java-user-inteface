@@ -42,14 +42,38 @@
             <h:form id="form">
                 <p:growl id="messages" showDetail="true" />
 
-                <p:toolbar>
-                    <p:toolbarGroup>
-                        <p:commandButton value="New Team" icon="pi pi-plus" actionListener="#{teamView.openNew}"
-                                         update=":dialogs:manage-team-content" oncomplete="PF('manageTeamDialog').show()"
-                                         styleClass="ui-button-success" />
-                    </p:toolbarGroup>
-                </p:toolbar>
-
+				<p:toolbar>
+				    <p:toolbarGroup>
+				        <p:commandButton value="New Team" icon="pi pi-plus" actionListener="#{teamView.openNew}"
+				                         update=":dialogs:manage-team-content" oncomplete="PF('manageTeamDialog').show()" style="margin-right: .5rem"
+				                         styleClass="ui-button-success" />
+				        <p:commandButton id="edit-team-button" value="Edit"
+				                         actionListener="#{teamView.editTeams}"
+				                         icon="pi pi-pencil" style="margin-right: .5rem"
+				                         update=":dialogs:manage-team-content"
+				                         oncomplete="PF('manageTeamDialog').show()"
+				                         disabled="#{!teamView.hasOneSelectedTeam()}">
+				        </p:commandButton>
+				        <p:commandButton id="delete-teams-button"
+				                         value="#{teamView.deleteButtonMessage}" icon="pi pi-trash"
+				                         actionListener="#{teamView.deleteSelectedTeam}"
+				                         styleClass="ui-button-danger" style="margin-right: .5rem"
+				                         disabled="#{!teamView.hasSelectedTeams()}" update="@this, edit-team-button">
+				            <p:confirm header="Confirmation"
+				                       message="Delete the selected teams?"
+				                       icon="pi pi-exclamation-triangle" />
+				        </p:commandButton> 
+				    </p:toolbarGroup>
+				    <p:toolbarGroup align="right">
+				        <p:fileUpload mode="simple" skinSimple="true" label="Import"
+				                      chooseIcon="pi pi-download" />
+				        <p:commandButton value="Export" icon="pi pi-upload"
+				                         styleClass="ui-button-help" ajax="false">
+				            <p:dataExporter type="pdf" target="dt-teams"
+				                            fileName="teams" />
+				        </p:commandButton>
+				    </p:toolbarGroup>
+				</p:toolbar>
 				<p:dataTable id="dt-teams" widgetVar="dtTeams" var="team"
 				             value="#{teamView.teams}" reflow="true"
 				             styleClass="teams-table"
@@ -82,10 +106,6 @@
 				              filterBy="#{team.name}">
 				        <h:outputText value="#{team.name}" />
 				    </p:column>
-				    <p:column headerText="Description" sortBy="#{team.description}"
-				              filterBy="#{team.description}">
-				        <h:outputText value="#{team.description}" />
-				    </p:column>
 				    <p:column headerText="Members">
 				        <h:outputText value="#{team.getTeamsList()}" />
 				    </p:column>
@@ -100,25 +120,29 @@
                                 <p:outputLabel for="teamName">Name</p:outputLabel>
                                 <p:inputText id="teamName" value="#{teamView.selectedTeam.name}" required="true" />
                             </div>
-                            <div class="field">
-                                <p:outputLabel for="teamDescription">Description</p:outputLabel>
-                                <p:inputTextarea id="teamDescription" value="#{teamView.selectedTeam.description}" />
-                            </div>
-                            <div class="field">
-                                <p:outputLabel for="teamMembers">Team Members</p:outputLabel>
-                                <p:pickList value="#{teamView.teamMembers}" var="student" 
-                                            itemLabel="#{team.name}" itemValue="#{team}" 
-                                            converter="teamConverter">
-                                    <f:facet name="sourceCaption">Available Students</f:facet>
-                                    <f:facet name="targetCaption">Selected Members</f:facet>
-                                </p:pickList>
-                            </div>
+							<div class="field">
+								<p:pickList id="TeamPickList" value="#{teamView.teamMembers}"
+								             var="student" effect="bounce" itemValue="#{student}"
+								             itemLabel="#{student.displayName}" showSourceControls="false"
+								             showTargetControls="false" showCheckbox="false"
+								             showSourceFilter="true" showTargetFilter="true"
+								             filterMatchMode="contains" converter="teamConverter"
+								             responsive="true">
+								
+								    <f:facet name="sourceCaption">Available</f:facet>
+								    <f:facet name="targetCaption">Assigned</f:facet>
+								
+								    <p:column>
+								        <h:outputText value="#{student.displayName}" />
+								    </p:column>
+								</p:pickList>
+								 </div>
                         </p:outputPanel>
                     </p:outputPanel>
 
                     <f:facet name="footer">
                         <p:commandButton value="Save" icon="pi pi-check" actionListener="#{teamView.saveTeam}"
-                                         update=":form:dtTeams" oncomplete="PF('manageTeamDialog').hide()" />
+                                         update=":form:dt-teams" oncomplete="PF('manageTeamDialog').hide()" />
                         <p:commandButton value="Cancel" icon="pi pi-times"
                                          onclick="PF('manageTeamDialog').hide()" type="button" />
                     </f:facet>
