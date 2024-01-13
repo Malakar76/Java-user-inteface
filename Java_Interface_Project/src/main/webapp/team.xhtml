@@ -107,7 +107,11 @@
 				        <h:outputText value="#{team.name}" />
 				    </p:column>
 				    <p:column headerText="Members">
-				        <h:outputText value="#{team.getTeamsList()}" />
+				        <p:dataTable var="team" value="#{team.getStudents()}" scrollable="true" scrollHeight="100">
+								<p:column style="text-align:center;">
+									<h:outputText value="#{team.displayName()}" />
+								</p:column> 
+								</p:dataTable>
 				    </p:column>
 				</p:dataTable>
             </h:form>

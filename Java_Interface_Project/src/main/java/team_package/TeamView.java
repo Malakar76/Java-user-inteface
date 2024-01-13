@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
 
+import project_package.ProjectTeam;
 import student_package.AccountCreation;
 import student_package.Student;
 
@@ -238,12 +239,16 @@ public class TeamView implements Serializable {
 	}
 	
 	public void AddTeam(Team selectedTeam) {
+		String idList = "";
+		for (Student student : selectedTeam.getStudents()) {
+			idList += student.getId()+":";
+		}
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(
 						"INSERT INTO Groupe (id, name, student) VALUES (?, ?, ?)")) {
 			preparedStatement.setString(1, selectedTeam.getId());
 			preparedStatement.setString(2, selectedTeam.getName());
-			preparedStatement.setString(3, selectedTeam.getTeamsList());
+			preparedStatement.setString(3, idList);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -251,8 +256,39 @@ public class TeamView implements Serializable {
 	}
 	
 	public void updateTeam() {
-		System.out.println("ok");
+		updateStudents(selectedTeams.get(0));
+		this.selectedTeams.get(0).setProjectTeams(this.teamMembers.getTarget());
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Students Saved"));
+		PrimeFaces.current().ajax().update("form:messages");
+		PrimeFaces.current().executeScript("PF('dtTeams').clearFilters()");
+		PrimeFaces.current().executeScript("PF('editTeamDialog').hide()");
+		
 		
 	}
 	
+	public void updateStudents(Team selectedTeam) {
+		List<Student> toAdd = new ArrayList<Student>(this.teamMembers.getTarget());
+		toAdd.removeAll(selectedTeam.getStudents());
+		List<Student> toRemove = new ArrayList<Student>(selectedTeam.getStudents());
+		toRemove.retainAll(this.teamMembers.getSource());
+		List<Student> toAddRemove = new ArrayList<Student>(selectedTeam.getStudents());
+		toAddRemove.removeAll(toRemove);
+		toAddRemove.addAll(toAdd);
+		addRemoveStudents(toAddRemove,selectedTeam);
+	}
+	
+	public void addRemoveStudents(List<Student> toaddRemove, Team selectedTeam) {
+		String idList = "";
+		for (Student students : toaddRemove) {
+			idList += students.getId()+":";
+		}
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Groupe SET student = ? WHERE id= ?")) {
+			preparedStatement.setString(1, idList);
+			preparedStatement.setString(2, selectedTeam.getId());
+			preparedStatement.executeUpdate();
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+		}
 }
