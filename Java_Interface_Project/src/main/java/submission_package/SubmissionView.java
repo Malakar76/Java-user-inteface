@@ -15,9 +15,6 @@ import javax.faces.bean.ManagedBean;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-
-import org.primefaces.model.DualListModel;
-
 import project_package.Project;
 import project_package.ProjectTeam;
 import student_package.AccountCreation;

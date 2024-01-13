@@ -22,6 +22,7 @@ import org.primefaces.model.DualListModel;
 import student_package.AccountCreation;
 import student_package.Student;
 
+@SuppressWarnings("serial")
 @ManagedBean(name = "teamView")
 @ApplicationScoped
 public class TeamView implements Serializable {

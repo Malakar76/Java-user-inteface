@@ -5,8 +5,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import student_package.Student;
-
 @FacesConverter(value = "teamConverter")
 public class TeamConverter implements Converter {
 

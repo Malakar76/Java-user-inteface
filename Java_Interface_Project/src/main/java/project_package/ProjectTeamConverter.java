@@ -6,6 +6,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 import student_package.Student;
+import team_package.Team;
 
 @FacesConverter(value = "projectTeamConverter")
 public class ProjectTeamConverter implements Converter {
@@ -15,7 +16,7 @@ public class ProjectTeamConverter implements Converter {
 		if(value.charAt(0)=='1') {
 			return Student.fromString(value);
 		}else {
-			return null; //TODO: ADD METHOD FROM TEAM
+			return Team.fromString(value);
 		}
 		
         
