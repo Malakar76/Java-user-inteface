@@ -91,6 +91,7 @@ public class TeamView implements Serializable {
 		this.teams = getTeamsTable();
 		List<Student> studentSource = new ArrayList<>();
 		List<Student> studentTarget = new ArrayList<>();
+		this.selectedTeam =new Team();
 
 		teamMembers = new DualListModel<Student>(studentSource, studentTarget);
 
@@ -113,8 +114,10 @@ public class TeamView implements Serializable {
 		return "Delete";
 	}
 	public void editTeams() {
+			System.out.println(this.selectedTeams.get(0).getName());
 			this.teamMembers.setSource(availableStudents(this.selectedTeams.get(0))); 
 			this.teamMembers.setTarget(this.selectedTeams.get(0).getStudents());
+			this.selectedTeam = this.selectedTeams.get(0);
 	}
 
 	public List<Team> getTeamsTable() {
@@ -190,6 +193,7 @@ public class TeamView implements Serializable {
 	public void saveTeam() {
 		if (this.selectedTeam.getId() == null) {
 			this.selectedTeam.setId("0GR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+			this.selectedTeam.setStudents(this.teamMembers.getTarget());
 			this.teams.add(this.selectedTeam);
 			AddTeam(selectedTeam);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Team Added"));
@@ -220,7 +224,7 @@ public class TeamView implements Serializable {
 		this.selectedTeams = null;
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Removed"));
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-teams");
-		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
+		PrimeFaces.current().executeScript("PF('dtTeams').clearFilters()");
 	}
 
 	public void checkInitTable() {
@@ -244,6 +248,11 @@ public class TeamView implements Serializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateTeam() {
+		System.out.println("ok");
+		
 	}
 	
 }

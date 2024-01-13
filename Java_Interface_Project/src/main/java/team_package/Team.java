@@ -35,6 +35,10 @@ public class Team implements Serializable, ProjectTeam {
     	return students;
     }
     
+    public void setStudents(List<Student> students){
+    	this.students = students;
+    }
+    
     public void setProjectTeams(List<Student> students) {
     	this.students = new ArrayList<Student>();
     	this.students.addAll(students);
@@ -92,7 +96,7 @@ public class Team implements Serializable, ProjectTeam {
     public String getTeamsList() {
     	String result = "";
     	for (ProjectTeam team : this.getStudents()) {
-    		result += (team.displayName()+"\n");
+    		result += team.getId()+":";
     		}
     		return result;
     }
