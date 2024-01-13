@@ -1,6 +1,8 @@
 package team_package;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -48,7 +50,31 @@ public class TeamView implements Serializable {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	public List<Team> getTeams() {
+        return teams;
+    }
 
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
+
+    public Team getSelectedTeam() {
+        return selectedTeam;
+    }
+
+    public void setSelectedTeam(Team selectedTeam) {
+        this.selectedTeam = selectedTeam;
+    }
+
+    public DualListModel<Student> getTeamMembers() {
+        return teamMembers;
+    }
+
+    public void setTeamMembers(DualListModel<Student> teamMembers) {
+        this.teamMembers = teamMembers;
+    }
+   
     
     @Resource(lookup = "java:comp/env/jdbc/h2db")
     private DataSource dataSource;
@@ -69,7 +95,23 @@ public class TeamView implements Serializable {
 		teamMembers = new DualListModel<Student>(studentSource, studentTarget);
 
     }
- 
+    
+	public boolean hasSelectedTeams() {
+		return this.selectedTeams != null && !this.selectedTeams.isEmpty();
+	}
+
+	public boolean hasOneSelectedTeam() {
+		return this.selectedTeams != null && (this.selectedTeams.size() == 1);
+	}
+	
+	public String getDeleteButtonMessage() {
+		if (hasSelectedTeams()) {
+			int size = this.selectedTeams.size();
+			return size > 1 ? size + " Teams selected" : "1 team selected";
+		}
+
+		return "Delete";
+	}
 	public void editTeams() {
 			this.teamMembers.setSource(availableStudents(this.selectedTeams.get(0))); 
 			this.teamMembers.setTarget(this.selectedTeams.get(0).getStudents());
@@ -78,7 +120,7 @@ public class TeamView implements Serializable {
 	public List<Team> getTeamsTable() {
 		List<Team> teams = new ArrayList<Team>();
 		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Group")) {
+				PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Groupe")) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				Team team = new Team(resultSet.getString("id"), resultSet.getString("name"),new ArrayList<Student>());
@@ -139,53 +181,67 @@ public class TeamView implements Serializable {
 		return available;
 	}
 
-    public void saveTeam() {
-        // Logique pour sauvegarder l'équipe dans la base de données
-        if (selectedTeam.getId() == null) {
-            selectedTeam.setId(UUID.randomUUID().toString().substring(0, 6));
-            teams.add(selectedTeam);
-            // Ajouter l'équipe dans la base de données
-        } else {
-            // Mettre à jour l'équipe dans la base de données
-        }
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-teams");
-        PrimeFaces.current().executeScript("PF('manageTeamDialog').hide()");
-    }
+	public void openNew() {
+		this.selectedTeam = new Team();
+	}
 
-    // Getters et Setters
+	public void saveTeam() {
+		if (this.selectedTeam.getId() == null) {
+			this.selectedTeam.setId("ST" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6));
+			this.teams.add(this.selectedTeam);
+			AddTeam(selectedTeam);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Team Added"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Team Updated"));
+		}
 
-    public List<Team> getTeams() {
-        return teams;
-    }
+		PrimeFaces.current().executeScript("PF('manageTeamDialog').hide()");
+		PrimeFaces.current().ajax().update("form:messages", "form:dtTeams");
 
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
+	}
+	
+	public void DeleteTeams(List<Team> selectedTeam) {
+		for (Team team : selectedTeams) {
+			try (Connection connection = dataSource.getConnection();
+					PreparedStatement preparedStatement = connection
+							.prepareStatement("DELETE FROM Team WHERE id=?")) {
+				preparedStatement.setString(1, team.getId());
+				preparedStatement.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void deleteSelectedTeam() {
+		DeleteTeams(this.selectedTeams);
+		this.teams.removeAll(this.selectedTeams);
+		this.selectedTeams = null;
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Removed"));
+		PrimeFaces.current().ajax().update("form:messages", "form:dt-teams");
+		PrimeFaces.current().executeScript("PF('dtStudents').clearFilters()");
+	}
 
-    public Team getSelectedTeam() {
-        return selectedTeam;
-    }
-
-    public void setSelectedTeam(Team selectedTeam) {
-        this.selectedTeam = selectedTeam;
-    }
-
-    public DualListModel<Student> getTeamMembers() {
-        return teamMembers;
-    }
-
-    public void setTeamMembers(DualListModel<Student> teamMembers) {
-        this.teamMembers = teamMembers;
-    }
-   
 	public void checkInitTable() {
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(
-						"CREATE TABLE IF NOT EXISTS Group (id VARCHAR(255), name VARCHAR(255), student TEXT")) {
+						"CREATE TABLE IF NOT EXISTS Groupe (id VARCHAR(255), name VARCHAR(255), student TEXT)")) {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void AddTeam(Team selectedTeam) {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(
+						"INSERT INTO Groupe (id, name, student) VALUES (?, ?, ?)")) {
+			preparedStatement.setString(1, selectedTeam.getId());
+			preparedStatement.setString(2, selectedTeam.getName());
+			preparedStatement.setString(3, selectedTeam.getTeamsList());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
