@@ -19,7 +19,16 @@ The data in  the following tables are here as example. For this example you'll f
 ### Project  
 | id |       description       |    name    |  type |
 |:--:|:-----------------------:|:----------:|:-----:|
-|  C | Create a Web Design app | Web Design | Group |  
+|  C | Create a Web Design app | Web Design | Group |    
+### HOW TO EDIT DATABASE (Manually, only if needed)  
+Run `java -jar C:\Users\Robin\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar` (**Replace with your own path**)  
+It will open a web page and there set :  
+- URL JDBC : jdbc:h2:/~/database
+- username : user
+- password : user
+
+**DO NOT FORGET TO STOP YOUR TOMCAT SERVER**
+
 
 ## Architecture of class dependencies
 - Project
