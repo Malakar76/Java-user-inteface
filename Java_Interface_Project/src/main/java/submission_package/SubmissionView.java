@@ -30,8 +30,6 @@ public class SubmissionView implements Serializable{
 	
 	private List<Project> projects;
 	private Project selectedProject;
-	
-	
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -39,7 +37,7 @@ public class SubmissionView implements Serializable{
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	public List<Project> getProjects() {
 		return projects;
 	}
@@ -99,6 +97,7 @@ public class SubmissionView implements Serializable{
 					if(resultSet2.next()) {
 						String [] parts = resultSet2.getString("teammate").split(":");
 						String [] partsSubmit = resultSet2.getString("submit").split(":");
+						
 					if (project.getType().equals("Individual")) {
 						for (int i = 0; i < parts.length; i++) {
 							try (PreparedStatement preparedStatement3 = connection
@@ -115,6 +114,7 @@ public class SubmissionView implements Serializable{
 									} else {
 										student.setAccountCreation(AccountCreation.NotCreated);
 									}
+									System.out.println(partsSubmit[i]);
 									project.addTeam(student);
 									project.addSubmit(partsSubmit[i]);
 								}

@@ -366,19 +366,21 @@ public class ProjectView implements Serializable {
 				parts = resultSet.getString("submit").split(":");
 				for (ProjectTeam teammate : toAddRemove) {
 					idList += (teammate.getId()+":");
+					int find = 0;
 					for (int i=0; i<selectedProject.getProjectTeams().size();i++){
 						if (teammate.getId().equals(selectedProject.getProjectTeams().get(i).getId())) {
 							submitList += (parts[i]+":");
-						}else {
-							submitList += "Pending:";
+							find = 1;
 						}
+					}
+					if(find ==0) {
+						submitList += "Pending:";
 					}
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Team SET teammate = ?, submit = ? WHERE id = ?")) {
 			preparedStatement.setString(1, idList);

@@ -139,14 +139,16 @@
 							<h:outputText value="#{submissionView.selectedProject.type}" />
 
 							<h:outputText value="Teams:"  />
-							<p:dataTable var="team" value="#{submissionView.selectedProject.projectTeams}" scrollable="true" scrollHeight="200">
+							<p:dataTable var="team" value="#{submissionView.selectedProject.projectTeams}" scrollable="true" rowIndexVar="teamStatus" scrollHeight="200">
 								<p:column headerText="Team" style="text-align:center;">
 									<h:outputText value="#{team.displayName()}" />
 								</p:column>
 
 								<p:column headerText="Status" style="text-align:center;">
-									<h:outputText value="Pending" />
+									<h:outputText value="#{submissionView.selectedProject.submited.get(teamStatus)}" />
 								</p:column>
+								
+								 
 								</p:dataTable>
 						</p:panelGrid>
 					</p:outputPanel>
