@@ -42,6 +42,16 @@ It will open a web page and there set :
 - Java Server Faces : 2.2.18
 - JDK : 17
 - Tomcat : 9.0.84
+## Features :  
+- Create/Delete Student
+- Crete/Delete Teams (composed of Students)
+- Create/Delete/Archive Projects (Composed of Teams or Students (ie. Individual or Group project))
+- Delete Archive Projects
+- Add/Remove Teams to Projects
+- Submission Tracking of Projects
+- Database to load/store data even if the server is restart
+## First Use :  
+Load every webpage from left to right in order to init the Database properly  
 # TODO : Remaining List 
 - Add the login Page (Kilyan)
 - Finish the implementation of Team (Kilyan)
