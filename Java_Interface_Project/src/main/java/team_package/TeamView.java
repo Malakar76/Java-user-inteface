@@ -206,10 +206,10 @@ public class TeamView implements Serializable {
 	}
 	
 	public void DeleteTeams(List<Team> selectedTeam) {
-		for (Team team : selectedTeams) {
+		for (Team team : selectedTeam) {
 			try (Connection connection = dataSource.getConnection();
 					PreparedStatement preparedStatement = connection
-							.prepareStatement("DELETE FROM Team WHERE id=?")) {
+							.prepareStatement("DELETE FROM Groupe WHERE id=?")) {
 				preparedStatement.setString(1, team.getId());
 				preparedStatement.executeUpdate();
 			} catch (SQLException e) {
@@ -222,7 +222,7 @@ public class TeamView implements Serializable {
 		this.teams.removeAll(this.selectedTeams);
 		this.selectedTeams = null;
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Teams Removed"));
-		PrimeFaces.current().ajax().update("form:messages", "form:dt-teams");
+		PrimeFaces.current().ajax().update("form:messages", "form:dtTeams");
 		PrimeFaces.current().executeScript("PF('dtTeams').clearFilters()");
 	}
 

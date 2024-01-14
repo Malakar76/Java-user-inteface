@@ -4,7 +4,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-	<title>Team Creation</title>
+	<title>Team</title>
 	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
 </h:head>      
 <body>
@@ -58,7 +58,7 @@
 				                         value="#{teamView.deleteButtonMessage}" icon="pi pi-trash"
 				                         actionListener="#{teamView.deleteSelectedTeam}"
 				                         styleClass="ui-button-danger" style="margin-right: .5rem"
-				                         disabled="#{!teamView.hasSelectedTeams()}" update="@this">
+				                         disabled="#{!teamView.hasSelectedTeams()}" update="@this, edit-team-button">
 				            <p:confirm header="Confirmation"
 				                       message="Delete the selected team(s)?"
 				                       icon="pi pi-exclamation-triangle" />
@@ -193,6 +193,11 @@
                 oncomplete="PF('deleteTeamDialog').hide()" />
             <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
                 onclick="PF('deleteTeamDialog').hide()" />
+        </p:confirmDialog>
+        <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                icon="pi pi-times" />
         </p:confirmDialog>
             </h:form>
         </div>

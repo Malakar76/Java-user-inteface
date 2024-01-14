@@ -298,3 +298,35 @@ nav input{
 	text-align: center; 
 	margin-top: 15px; 
 }
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    background-color: #f4f4f4; 
+}
+
+.form-box {
+    background: #fff;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); 
+    width: 500px;
+    
+.no-padding .ui-panelgrid-cell {
+    padding: .5rem; 
+}
+.panel-header {
+    text-align: center;
+    font-size: 1.5em; 
+    margin-bottom: 1em; 
+}
+
+.login-button {
+    display: block; 
+    width: auto; 
+    text-align:center;
+    margin: 2em auto 0;
+    padding: 0.5em 2em;
+}

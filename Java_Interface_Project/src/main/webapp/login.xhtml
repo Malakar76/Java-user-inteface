@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Login</title>
+	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>      
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="logo">
+				<a href="#">ADMIN Interface</a>
+			</div>
+			<input type="radio" name="slider" id="menu-btn"></input> <input
+				type="radio" name="slider" id="close-btn"></input>
+			<label for="menu-btn" class="btn menu-btn"><i
+				class="fas fa-bars"></i></label>
+		</div>
+	</nav>
+</body>
+  <h:body>
+        <div class="login-container">
+            <h:form class="form-box">
+                <p:panel header="ADMIN"  >
+                    <h:panelGrid columns="2" styleClass="no-padding">
+                        <h:outputLabel for="username" value="User :" />
+                        <p:inputText id="username" value="#{loginBean.username}" required="true" />
+
+                        <h:outputLabel for="password" value="Password :" />
+                        <p:password id="password" value="#{loginBean.password}" required="true" />
+
+                        <p:commandButton value="Connexion" action="#{loginBean.login}" update="@form" styleClass="ui-button-primary" />
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>

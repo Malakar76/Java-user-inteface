@@ -5,7 +5,7 @@
 	version="4.0">
 	<display-name>Java_Interface_Project</display-name>
 	<welcome-file-list>
-		<welcome-file>home.xhtml</welcome-file>
+		<welcome-file>login.xhtml</welcome-file>
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
