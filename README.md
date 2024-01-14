@@ -53,8 +53,7 @@ It will open a web page and there set :
 ## First Use :  
 Load every webpage from left to right in order to init the Database properly  
 # TODO : Remaining List 
-- Add the login Page (Kilyan)
-- Finish the implementation of Team (Kilyan)
+- Add security for pages (You can't modify login.xhtml in home.xhtml and have access to home.xhtml, filters from Maven or other possibilities)
 - Student View for submission of files (or directly when files are put on submission folder, so no Student View needed)
 - Manage import of Students via CSV file
 - Manage import of Projects via CSV file
