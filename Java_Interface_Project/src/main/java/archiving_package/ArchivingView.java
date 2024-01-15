@@ -85,8 +85,8 @@ public class ArchivingView implements Serializable {
 	 * @param currentArchive The Project object to set as the currently selected
 	 *                       archive.
 	 */
-	public void setCurrentArchive(Project currenArchive) {
-		this.currentArchive = currenArchive;
+	public void setCurrentArchive(Project currentArchive) {
+		this.currentArchive = currentArchive;
 	}
 
 	/**

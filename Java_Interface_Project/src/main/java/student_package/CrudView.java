@@ -140,7 +140,7 @@ public class CrudView implements Serializable {
 	/**
 	 * Sets the list of selected students.
 	 *
-	 * @param selectedStudents A list of Student objects to be set as selected
+	 * @param selectedStudent A list of Student objects to be set as selected
 	 *                         students.
 	 */
 	public void setSelectedStudent(Student selectedStudent) {

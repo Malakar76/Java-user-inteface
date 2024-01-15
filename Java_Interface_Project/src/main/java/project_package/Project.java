@@ -148,7 +148,7 @@ public class Project implements Serializable {
 	/**
 	 * Setter for the project name.
 	 *
-	 * @param name The name to be set for the project.
+	 * @param Name The name to be set for the project.
 	 */
 	public void setName(String Name) {
 		this.name = Name;

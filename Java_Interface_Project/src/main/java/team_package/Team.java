@@ -113,7 +113,7 @@ public class Team implements Serializable, ProjectTeam {
 	/**
 	 * Sets the name for the team.
 	 *
-	 * @param name The new name String to be set.
+	 * @param Name The new name String to be set.
 	 */
 	public void setName(String Name) {
 		this.name = Name;

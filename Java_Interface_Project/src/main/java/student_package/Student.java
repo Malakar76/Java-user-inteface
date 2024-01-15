@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import project_package.ProjectTeam;
 
-@SuppressWarnings("serial")
 /**
  * The `Student` class represents a student entity with various attributes such
  * as a unique ID, code, first name, last name, password, and account creation
@@ -16,6 +15,7 @@ import project_package.ProjectTeam;
  * @author Kilyan Bentchakal
  * @version 1.0
  */
+@SuppressWarnings("serial")
 public class Student implements Serializable, ProjectTeam {
 
 	private String id;
