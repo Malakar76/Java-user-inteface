@@ -1,7 +1,6 @@
 package student_package;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,9 +38,6 @@ public class CrudView implements Serializable {
 
 	private List<Student> selectedStudents;
 
-	@ManagedProperty(value = "#{studentService}")
-	private StudentService studentService;
-
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -66,13 +62,6 @@ public class CrudView implements Serializable {
 		this.createAccountCheck = createAccountCheck;
 	}
 
-	public StudentService getStudentService() {
-		return studentService;
-	}
-
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
 
 	@PostConstruct
 	public void init() {
