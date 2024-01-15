@@ -2,9 +2,9 @@
 ## Objective :  
 The project aims to develop a web application for managing a Linux-based teaching server. This application, for each course associated with the server, will enable the import of student and team lists, creation of user accounts with password delivery via email, firewall configuration by students, formation of user groups for teams, establishment of shared and individual work folders for projects, tracking of submissions, archiving of current-year data, and deletion of student accounts.  
 ## Installation :  
-### Whithout changes :  
-To run the project just put the Java_Interface_Project.war file into the webapp folder of your tomcat server. It will automatically deploy the web application at the web adress ip:tomcatPort/Java_Interface_Project.
-### Whith changes :  
+### Without changes :  
+To run the project just put the Java_Interface_Project.war file into the webapp folder of your tomcat server. It will automatically deploy the web application at the web address ip:tomcatPort/Java_Interface_Project.
+### With changes :  
 If you want to modify the project you can open it as an eclipse project. Everything is already set up. The project is running with Maven to handle the dependencies.   
 ## Dependencies :  
 - Prime Faces : 12.0.0
@@ -14,13 +14,13 @@ If you want to modify the project you can open it as an eclipse project. Everyth
 ## Features :  
 - Create/Delete Student
 - Crete/Delete Teams (composed of Students)
-- Create/Delete/Archive Projects (Composed of Teams or Students (ie. Individual or Group project))
+- Create/Delete/Archive Projects (Composed of Teams or Students (i.e. Individual or Group project))
 - Delete Archive Projects
 - Add/Remove Teams to Projects
 - Submission Tracking of Projects
 - Database to load/store data even if the server is restart
 ## First Use :  
-Load every webpage from left to right in order to init the Database properly  
+Load every webpage from left to right in order to initialize the Database properly  
 The credentials to connect as Admin are :
 - User : admin
 - Password : admin  
