@@ -197,7 +197,6 @@ public class TeamView implements Serializable {
 	 * the selected team.
 	 */
 	public void editTeams() {
-		System.out.println(this.selectedTeams.get(0).getName());
 		this.teamMembers.setSource(availableStudents(this.selectedTeams.get(0)));
 		this.teamMembers.setTarget(this.selectedTeams.get(0).getStudents());
 		this.selectedTeam = this.selectedTeams.get(0);

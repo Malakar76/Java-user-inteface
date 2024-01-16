@@ -19,7 +19,7 @@ The project aims to develop a web application for managing a Linux-based teachin
 <img alt="Submission Tracking" src="ressources/SubmissionTrack.PNG" width="700" height="300">  
 
 ## First Use :  
-Load every webpage from left to right in order to initialize the Database properly  
+Load every webpage from left to right in order to initialize the Database properly. It will take some time to load the pages for the first time.  
 The credentials to connect as Admin are :
 - User : admin
 - Password : admin  
