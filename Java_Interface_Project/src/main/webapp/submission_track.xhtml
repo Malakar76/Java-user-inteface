@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Submission Track</title>
+	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+	<style type="text/css">
+.ui-dataview-list .ui-dataview-row {
+	border-bottom: 1px solid #A8A8A8;
+	padding: 25px 10px;
+	/* with the exported variables from Nova and Luna Themes*/
+	border-bottom-color: var(--input-border-color, #A8A8A8);
+}
+</style>
+</h:head>
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="logo">
+				<a href="#">ADMIN</a>
+			</div>
+			<input type="radio" name="slider" id="menu-btn"></input> <input
+				type="radio" name="slider" id="close-btn"></input>
+			<ul class="nav-links">
+				<label for="close-btn" class="btn close-btn"><i
+					class="fas fa-times"></i></label>
+				<li><a href="home.xhtml">Home</a></li>
+				<li><a href="student_list.xhtml">Student Management</a></li>
+				<li><a href="team.xhtml" class="desktop-item">Team
+						Management</a></li>
+				<li><a href="projects_creation.xhtml" class="desktop-item">Projects</a>
+					<input type="checkbox" id="showDrop"></input> <label for="showDrop"
+					class="mobile-item">Projects</label>
+					<ul class="drop-menu">
+						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
+						<li><a href="submission_track.xhtml">Submission Track</a></li>
+					</ul></li>
+				<li><a href="#">Configuration</a></li>
+				<li><a href="archiving.xhtml">Archiving</a></li>
+			</ul>
+			<label for="menu-btn" class="btn menu-btn"><i
+				class="fas fa-bars"></i></label>
+		</div>
+	</nav>
+
+
+	<div class="body">
+		<div class="card crud-demo">
+			<h:form id="form">
+				<p:growl id="messages" showDetail="true" />
+
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Refresh" icon="pi pi-refresh"
+							actionListener="#{submissionView.updateProjectList}"
+							update=":form:dt-project" styleClass="ui-button-info"
+							style="margin-right: .5rem">
+						</p:commandButton>
+
+					</p:toolbarGroup>
+
+				</p:toolbar>
+
+				<p:dataView var="project" value="#{submissionView.projects}"
+					gridIcon="pi pi-th-large" listIcon="pi pi-bars" id="dt-project"
+					widgetVar="dt-project">
+
+					<p:dataViewGridItem>
+						<p:panel header="#{project.name}" style="text-align:center">
+							<h:panelGrid columns="1" style="width:100%">
+								<h:outputText value="#{project.description}" />
+								<p:commandLink update=":dialogs:projectDetail"
+									oncomplete="PF('projectDialog').show()" title="View Detail">
+									<h:outputText styleClass="ui-icon pi pi-search"
+										style="margin:0 auto;" />
+									<f:setPropertyActionListener value="#{project}"
+										target="#{submissionView.selectedProject}" />
+								</p:commandLink>
+							</h:panelGrid>
+						</p:panel>
+					</p:dataViewGridItem>
+
+					<p:dataViewListItem>
+						<h:panelGroup
+							style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+							<h:panelGroup style="flex: 1;">
+								<h:outputText value="#{project.name}"
+									style="font-weight: bold;  margin-right: 10px;" />
+							</h:panelGroup>
+
+							<h:panelGroup
+								style="flex: 1; overflow: hidden; margin-right: 10px;">
+								<h:outputText value="#{project.description}"
+									style="font-weight: bold" />
+							</h:panelGroup>
+
+							<h:panelGroup style="flex: 1;">
+								<h:outputText value="#{project.type}"
+									style="font-weight: bold; margin-right: 10px;" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:commandLink update=":dialogs:projectDetail"
+									oncomplete="PF('projectDialog').show()" title="View Detail">
+									<h:outputText styleClass="ui-icon pi pi-search"
+										style="margin:0 auto;" />
+									<f:setPropertyActionListener value="#{project}"
+										target="#{submissionView.selectedProject}" />
+								</p:commandLink>
+							</h:panelGroup>
+						</h:panelGroup>
+					</p:dataViewListItem>
+
+				</p:dataView>
+
+
+			</h:form>
+
+			<h:form id="dialogs">
+
+				<p:dialog header="Project Info" widgetVar="projectDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="50%">
+					<p:outputPanel id="projectDetail" style="text-align:center;">
+						<p:panelGrid columns="2"
+							rendered="#{not empty submissionView.selectedProject}">
+
+
+							<h:outputText value="Name:" />
+							<h:outputText value="#{submissionView.selectedProject.name}" />
+
+							<h:outputText value="Description" />
+							<h:outputText
+								value="#{submissionView.selectedProject.description}" />
+
+							<h:outputText value="Type:" />
+							<h:outputText value="#{submissionView.selectedProject.type}" />
+
+							<h:outputText value="Teams:"  />
+							<p:dataTable var="team" value="#{submissionView.selectedProject.projectTeams}" scrollable="true" rowIndexVar="teamStatus" scrollHeight="200">
+								<p:column headerText="Team" style="text-align:center;">
+									<h:outputText value="#{team.displayName()}" />
+								</p:column>
+
+								<p:column headerText="Status" style="text-align:center;">
+									<h:outputText value="#{submissionView.selectedProject.submited.get(teamStatus)}" />
+								</p:column>
+								
+								 
+								</p:dataTable>
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:confirmDialog global="true" showEffect="fade" width="300">
+					<p:commandButton value="Yes" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no ui-button-secondary"
+						icon="pi pi-times" />
+				</p:confirmDialog>
+			</h:form>
+		</div>
+	</div>
+</body>
+</html>

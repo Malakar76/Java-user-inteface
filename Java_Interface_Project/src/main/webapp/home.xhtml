@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Landpage Admin</title>
+	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="logo">
+				<a href="#">ADMIN</a>
+			</div>
+			<input type="radio" name="slider" id="menu-btn"></input> <input
+				type="radio" name="slider" id="close-btn"></input>
+			<ul class="nav-links">
+				<label for="close-btn" class="btn close-btn"><i
+					class="fas fa-times"></i></label>
+				<li><a href="home.xhtml">Home</a></li>
+				<li><a href="student_list.xhtml">Student Management</a></li>
+				<li><a href="team.xhtml" class="desktop-item">Team Management</a></li>
+				<li><a href="#" class="desktop-item">Projects</a> <input
+					type="checkbox" id="showDrop"></input> <label for="showDrop"
+					class="mobile-item">Projects</label>
+					<ul class="drop-menu">
+						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
+						<li><a href="submission_track.xhtml">Submission Track</a></li>
+					</ul></li>
+				<li><a href="#">Configuration</a></li>
+				<li><a href="archiving.xhtml">Archiving</a></li>
+			</ul>
+			<label for="menu-btn" class="btn menu-btn"><i
+				class="fas fa-bars"></i></label>
+		</div>
+	</nav>
+
+	<div class="body-text">
+		<div class="video-container">
+			<div class="card video-card">
+				<p:video value="/resources/Java_Project_Video.mp4"
+					player="mp4" controls="true" width="960" height="540"
+					onplay="console.log('MP4 Started Playing')"
+					onpause="console.log('MP4 Stopped Playing')">
+        	Your browser does not support the video element.
+        	See: <h:outputLink
+						value="https://www.w3schools.com/html/html5_video.asp">HTML5 Video</h:outputLink>
+				</p:video>
+				<div class="video-title">
+					<h2>How to Use the Admin Interface</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

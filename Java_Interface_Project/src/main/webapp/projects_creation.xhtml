@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Projects Creation</title>
+	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="logo">
+				<a href="#">ADMIN</a>
+			</div>
+			<input type="radio" name="slider" id="menu-btn"></input> <input
+				type="radio" name="slider" id="close-btn"></input>
+			<ul class="nav-links">
+				<label for="close-btn" class="btn close-btn"><i
+					class="fas fa-times"></i></label>
+				<li><a href="home.xhtml">Home</a></li>
+				<li><a href="student_list.xhtml">Student Management</a></li>
+				<li><a href="team.xhtml" class="desktop-item">Team Management</a></li>
+				<li><a href="#" class="desktop-item">Projects</a> <input
+					type="checkbox" id="showDrop"></input> <label for="showDrop"
+					class="mobile-item">Projects</label>
+					<ul class="drop-menu">
+						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
+						<li><a href="submission_track.xhtml">Submission Track</a></li>
+					</ul></li>
+				<li><a href="#">Configuration</a></li>
+				<li><a href="archiving.xhtml">Archiving</a></li>
+			</ul>
+			<label for="menu-btn" class="btn menu-btn"><i
+				class="fas fa-bars"></i></label>
+		</div>
+	</nav>
+
+
+	<div class="body">
+		<div class="card crud-demo">
+			<h:form id="form">
+				<p:growl id="messages" showDetail="true" />
+
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="New" icon="pi pi-plus"
+							actionListener="#{projectView.openNew}"
+							update=":dialogs:manage-project-content"
+							oncomplete="PF('manageProjectDialog').show()"
+							styleClass="ui-button-success" style="margin-right: .5rem">
+							<p:resetInput target=":dialogs:manage-project-content" />
+						</p:commandButton>
+						<p:commandButton id="edit-project-button" value="Edit"
+							actionListener="#{projectView.editTeams}"
+							icon="pi pi-pencil" style="margin-right: .5rem"
+							update=":dialogs:manage-project-teams"
+							oncomplete="PF('manageProjectTeams').show()"
+							disabled="#{!projectView.hasOneSelectedProject()}">
+
+						</p:commandButton>
+						<p:commandButton id="delete-projects-button"
+							value="#{projectView.deleteButtonMessage}" icon="pi pi-trash"
+							actionListener="#{projectView.deleteSelectedProjects}"
+							styleClass="ui-button-danger" style="margin-right: .5rem"
+							disabled="#{!projectView.hasSelectedProjects()}" update="@this, archive-projects-button, edit-project-button">
+							<p:confirm header="Confirmation"
+								message="Delete the selected projects?"
+								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+						<p:commandButton id="archive-projects-button"
+							value="Archive" icon="pi pi-folder-open"
+							actionListener="#{projectView.archiveSelectedProjects}"
+							styleClass="ui-button-warning"
+							disabled="#{!projectView.hasSelectedProjects()}" update="@this, edit-project-button, delete-projects-button">
+							<p:confirm header="Confirmation"
+								message="Archive the selected projects?"
+								icon="pi pi-info-circle" />
+						</p:commandButton>
+					</p:toolbarGroup>
+					<p:toolbarGroup align="right">
+						<p:fileUpload mode="simple" skinSimple="true" label="Import"
+							chooseIcon="pi pi-download" />
+						<p:commandButton value="Export" icon="pi pi-upload"
+							styleClass="ui-button-help" ajax="false">
+							<p:dataExporter type="pdf" target="dt-projects"
+								fileName="projects" />
+						</p:commandButton>
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:dataTable id="dt-projects" widgetVar="dtProjects" var="project"
+					value="#{projectView.projects}" reflow="true"
+					styleClass="projects-table"
+					selection="#{projectView.selectedProjects}" rowKey="#{project.id}"
+					paginator="true" rows="10" rowSelectMode="add"
+					paginatorPosition="bottom">
+					<f:facet name="header">
+						<div class="projects-table-header">
+							<span style="font-weight: bold">PROJECTS</span> <span
+								class="filter-container ui-input-icon-left"> <i
+								class="pi pi-search"></i> <p:inputText id="globalFilter"
+									onkeyup="PF('dtProjects').filter()" placeholder="Search" />
+							</span>
+						</div>
+					</f:facet>
+
+					<p:ajax event="rowSelect"
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
+					<p:ajax event="rowUnselect"
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
+					<p:ajax event="rowSelectCheckbox"
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
+					<p:ajax event="rowUnselectCheckbox"
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
+					<p:ajax event="toggleSelect"
+						update=":form:delete-projects-button, :form:edit-project-button, :form:archive-projects-button" />
+
+					<p:column selectionMode="multiple" exportable="false"></p:column>
+					<p:column headerText="Name" sortBy="#{project.name}"
+						filterBy="#{project.name}">
+						<h:outputText value="#{project.name}" />
+					</p:column>
+					<p:column headerText="Description" sortBy="#{project.description}"
+						filterBy="#{project.description}">
+						<h:outputText value="#{project.description}" />
+					</p:column>
+					<p:column headerText="Type" sortBy="#{project.type}"
+						filterBy="#{project.type}">
+						<h:outputText value="#{project.type}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+			<h:form id="dialogs">
+				<p:dialog header="Project Details" showEffect="fade" modal="true"
+					widgetVar="manageProjectDialog" responsive="true">
+					<p:outputPanel id="manage-project-content" class="ui-fluid">
+						<p:outputPanel rendered="#{not empty projectView.selectedProject}">
+							<div class="field">
+								<p:outputLabel for="name">Name</p:outputLabel>
+								<p:inputText id="name"
+									value="#{projectView.selectedProject.name}" required="true" />
+							</div>
+							<div class="field">
+								<p:outputLabel for="description">Description</p:outputLabel>
+								<p:inputTextarea id="description"
+									value="#{projectView.selectedProject.description}"
+									required="true" />
+							</div>
+							<div class="field">
+								<p:outputLabel for="type">Type</p:outputLabel>
+								<p:selectOneButton id="type"
+									value="#{projectView.selectedProject.type}" required="true">
+									<f:selectItem itemLabel="Individual" itemValue="Individual" />
+									<f:selectItem itemLabel="Group" itemValue="Group" />
+								</p:selectOneButton>
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<f:facet name="footer">
+						<p:commandButton value="Save" icon="pi pi-check"
+							actionListener="#{projectView.saveProject}"
+							update="manage-project-content"
+							process="manage-project-content @this" />
+						<p:commandButton value="Cancel" icon="pi pi-times"
+							onclick="PF('manageProjectDialog').hide()"
+							class="ui-button-secondary" type="button" />
+					</f:facet>
+				</p:dialog>
+				<p:dialog header="Project Teams" showEffect="fade" modal="true"
+					widgetVar="manageProjectTeams" responsive="true">
+					<p:outputPanel id="manage-project-teams" class="ui-fluid">
+						<p:outputPanel>
+							<div class="field">
+								<p:pickList id="PojoPickList" value="#{projectView.projectTeams}"
+									var="projectTeam" effect="bounce" itemValue="#{projectTeam}"
+									itemLabel="#{projectTeam.displayName()}" showSourceControls="false"
+									showTargetControls="false" showCheckbox="false"
+									showSourceFilter="true" showTargetFilter="true"
+									filterMatchMode="contains" converter="projectTeamConverter"
+									responsive="true">
+
+									<f:facet name="sourceCaption">Available</f:facet>
+									<f:facet name="targetCaption">Assigned</f:facet>
+
+									<p:column>
+										<h:outputText value="#{projectTeam.displayName()}" />
+									</p:column>
+								</p:pickList>
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<f:facet name="footer">
+						<p:commandButton value="Save" icon="pi pi-check"
+							actionListener="#{projectView.saveTeams}"
+							 />
+						<p:commandButton value="Cancel" icon="pi pi-times"
+							onclick="PF('manageProjectTeams').hide()"
+							class="ui-button-secondary" type="button" />
+					</f:facet>
+				</p:dialog>
+				<p:confirmDialog widgetVar="deleteProjectDialog" showEffect="fade"
+					width="300" message="Delete the selected project(s)?"
+					header="Confirm" severity="warn">
+					<p:commandButton value="Yes" icon="pi pi-check"
+						actionListener="#{projectView.deleteSelectedProjects}"
+						process="@this" update=":form:delete-projects-button"
+						oncomplete="PF('deleteProjectDialog').hide()" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-button-secondary" icon="pi pi-times"
+						onclick="PF('deleteProjectDialog').hide()" />
+				</p:confirmDialog>
+
+				<p:confirmDialog global="true" showEffect="fade" width="300">
+					<p:commandButton value="Yes" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no ui-button-secondary"
+						icon="pi pi-times" />
+				</p:confirmDialog>
+			</h:form>
+		</div>
+	</div>
+</body>
+</html>

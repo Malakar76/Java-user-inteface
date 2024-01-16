@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Team</title>
+	<link rel="stylesheet" type="text/css" href="css/navbar.css"></link>
+</h:head>      
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="logo">
+				<a href="#">ADMIN</a>
+			</div>
+			<input type="radio" name="slider" id="menu-btn"></input> <input
+				type="radio" name="slider" id="close-btn"></input>
+			<ul class="nav-links">
+				<label for="close-btn" class="btn close-btn"><i
+					class="fas fa-times"></i></label>
+				<li><a href="home.xhtml">Home</a></li>
+				<li><a href="student_list.xhtml">Student Management</a></li>
+				<li><a href="team.xhtml" class="desktop-item">Team Management</a></li>
+				<li><a href="#" class="desktop-item">Projects</a> <input
+					type="checkbox" id="showDrop"></input> <label for="showDrop"
+					class="mobile-item">Projects</label>
+					<ul class="drop-menu">
+						<li><a href="projects_creation.xhtml">Projects Creation</a></li>
+						<li><a href="submission_track.xhtml">Submission Track</a></li>
+					</ul></li>
+				<li><a href="#">Configuration</a></li>
+				<li><a href="archiving.xhtml">Archiving</a></li>
+			</ul>
+			<label for="menu-btn" class="btn menu-btn"><i
+				class="fas fa-bars"></i></label>
+		</div>
+	</nav>
+</body>
+<h:body>
+    <div class="body">
+        <div class="card crud-demo">
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true" />
+
+				<p:toolbar>
+				    <p:toolbarGroup>
+				        <p:commandButton value="New Team" icon="pi pi-plus" actionListener="#{teamView.openNew}"
+				                         update=":dialogs:manage-team-content" oncomplete="PF('manageTeamDialog').show()" style="margin-right: .5rem"
+				                         styleClass="ui-button-success" />
+				        <p:commandButton id="edit-team-button" value="Edit"
+				                         actionListener="#{teamView.editTeams}"
+				                         icon="pi pi-pencil" style="margin-right: .5rem"
+				                         update=":dialogs:edit-team-content"
+				                         oncomplete="PF('editTeamDialog').show()"
+				                         disabled="#{!teamView.hasOneSelectedTeam()}">
+				        </p:commandButton>
+				        <p:commandButton id="delete-teams-button"
+				                         value="#{teamView.deleteButtonMessage}" icon="pi pi-trash"
+				                         actionListener="#{teamView.deleteSelectedTeam}"
+				                         styleClass="ui-button-danger" style="margin-right: .5rem"
+				                         disabled="#{!teamView.hasSelectedTeams()}" update="@this, edit-team-button">
+				            <p:confirm header="Confirmation"
+				                       message="Delete the selected team(s)?"
+				                       icon="pi pi-exclamation-triangle" />
+				        </p:commandButton> 
+				    </p:toolbarGroup>
+				    <p:toolbarGroup align="right">
+				        <p:fileUpload mode="simple" skinSimple="true" label="Import"
+				                      chooseIcon="pi pi-download" />
+				        <p:commandButton value="Export" icon="pi pi-upload"
+				                         styleClass="ui-button-help" ajax="false">
+				            <p:dataExporter type="pdf" target="dt-teams"
+				                            fileName="teams" />
+				        </p:commandButton>
+				    </p:toolbarGroup>
+				</p:toolbar>
+				<p:dataTable id="dt-teams" widgetVar="dtTeams" var="team"
+				             value="#{teamView.teams}" reflow="true"
+				             styleClass="teams-table"
+				             selection="#{teamView.selectedTeams}" rowKey="#{team.id}"
+				             paginator="true" rows="10" rowSelectMode="add"
+				             paginatorPosition="bottom">
+				    <f:facet name="header">
+				        <div class="teams-table-header">
+				            <span style="font-weight: bold">TEAMS</span>
+				            <span class="filter-container ui-input-icon-left">
+				                <i class="pi pi-search"></i>
+				                <p:inputText id="globalFilter" onkeyup="PF('dtTeams').filter()" placeholder="Search" />
+				            </span>
+				        </div>
+				    </f:facet>
+				
+				    <p:ajax event="rowSelect"
+				            update=":form:delete-teams-button, :form:edit-team-button" />
+				    <p:ajax event="rowUnselect"
+				            update=":form:delete-teams-button, :form:edit-team-button" />
+				    <p:ajax event="rowSelectCheckbox"
+				            update=":form:delete-teams-button, :form:edit-team-button" />
+				    <p:ajax event="rowUnselectCheckbox"
+				            update=":form:delete-teams-button, :form:edit-team-button" />
+				    <p:ajax event="toggleSelect"
+				            update=":form:delete-teams-button, :form:edit-team-button" />
+				
+				    <p:column selectionMode="multiple" exportable="false"></p:column>
+				    <p:column headerText="Name" sortBy="#{team.name}"
+				              filterBy="#{team.name}">
+				        <h:outputText value="#{team.name}" />
+				    </p:column>
+				    <p:column headerText="Members">
+				        <p:dataTable var="team" value="#{team.getStudents()}" scrollable="true" scrollHeight="100">
+								<p:column style="text-align:center;">
+									<h:outputText value="#{team.displayName()}" />
+								</p:column> 
+								</p:dataTable>
+				    </p:column>
+				</p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Team Details" widgetVar="manageTeamDialog" modal="true" dynamic="true">
+                    <p:outputPanel id="manage-team-content">
+                        <p:outputPanel rendered="#{not empty teamView.selectedTeam}">
+                            <div class="field">
+                                <p:outputLabel for="teamName">Name : </p:outputLabel>
+                                <p:inputText id="teamName" value="#{teamView.selectedTeam.name}" required="true" />
+                            </div>
+							<div class="field">
+								<p:pickList id="TeamPickList" value="#{teamView.teamMembers}"
+								             var="student" effect="bounce" itemValue="#{student}"
+								             itemLabel="#{student.displayName()}" showSourceControls="false"
+								             showTargetControls="false" showCheckbox="false"
+								             showSourceFilter="true" showTargetFilter="true"
+								             filterMatchMode="contains" converter="teamConverter"
+								             responsive="true">
+								
+								    <f:facet name="sourceCaption">Available</f:facet>
+								    <f:facet name="targetCaption">Assigned</f:facet>
+								
+								    <p:column>
+								        <h:outputText value="#{student.displayName()}" />
+								    </p:column>
+								</p:pickList>
+								 </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{teamView.saveTeam}"
+                                         update=":form:dt-teams" process="manage-team-content @this" />
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         onclick="PF('manageTeamDialog').hide()" type="button" />
+                    </f:facet>
+                </p:dialog>
+                
+                <p:dialog header="Team Details" widgetVar="editTeamDialog" modal="true" dynamic="true">
+                    <p:outputPanel id="edit-team-content">
+                        <p:outputPanel rendered="#{not empty teamView.selectedTeam}">
+                            <div class="field">
+                                <h:outputText value ="Name : " />
+                                <h:outputText id="teamName2" value="#{teamView.selectedTeam.name}" />
+                            </div>
+							<div class="field">
+								<p:pickList id="TeamPickList2" value="#{teamView.teamMembers}"
+								             var="student" effect="bounce" itemValue="#{student}"
+								             itemLabel="#{student.displayName()}" showSourceControls="false"
+								             showTargetControls="false" showCheckbox="false"
+								             showSourceFilter="true" showTargetFilter="true"
+								             filterMatchMode="contains" converter="teamConverter"
+								             responsive="true">
+								
+								    <f:facet name="sourceCaption">Available</f:facet>
+								    <f:facet name="targetCaption">Assigned</f:facet>
+								
+								    <p:column>
+								        <h:outputText value="#{student.displayName()}" />
+								    </p:column>
+								</p:pickList>
+								 </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{teamView.updateTeam}"
+                                         update=":form:dt-teams" process="edit-team-content @this" />
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         onclick="PF('editTeamDialog').hide()" type="button" />
+                    </f:facet>
+                </p:dialog>
+                <p:confirmDialog widgetVar="deleteTeamDialog" showEffect="fade" width="300"
+            message="Delete the selected team(s)?" header="Confirm" severity="warn">
+            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{teamView.deleteSelectedTeam}"
+                process="@this" update=":form:delete-teams-button"
+                oncomplete="PF('deleteTeamDialog').hide()" />
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                onclick="PF('deleteTeamDialog').hide()" />
+        </p:confirmDialog>
+        <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                icon="pi pi-times" />
+        </p:confirmDialog>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>
