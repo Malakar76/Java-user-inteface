@@ -25,9 +25,17 @@ The credentials to connect as Admin are :
 - Password : admin  
 ## Installation :  
 ### Without changes :  
-To run the project just put the Java_Interface_Project.war file that is inside the Java_Interface_Project folder into the webapp folder of your tomcat server. It will automatically deploy the web application at the web address ip:tomcatPort/Java_Interface_Project.
+To run the project just put the _Java_Interface_Project.war_ file that is inside the Java_Interface_Project folder into the webapps folder of your tomcat server. It will automatically deploy the web application at the web address ip:tomcatPort/Java_Interface_Project.
 ### With changes :  
-If you want to modify the project you can open it as an eclipse project. Everything is already set up. The project is running with Maven to handle the dependencies.   
+If you want to modify the project you can open it as an eclipse project. Everything is already set up. The project is running with Maven to handle the dependencies. 
+## How To Deploy a Tomcat Server :  
+- Download the tomcat server [zip](https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.zip)
+- Unzip it
+- Put the  _Java_Interface_Project.war_ file into the folder webapps
+- Run the _startup.sh_ into the /bin folder
+- Wait for the server to be deploy. The default address is _localhost:8080_
+- The address of this project will be _localhost:8080/Java_Inteface_Project_
+- Run the _shutdown.sh_ to stop the server
 ## Dependencies :  
 - Prime Faces : 12.0.0
 - Java Server Faces : 2.2.18
